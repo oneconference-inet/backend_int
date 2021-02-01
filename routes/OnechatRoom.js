@@ -51,7 +51,8 @@ router.post("/create", async function (req, res, next) {
             meetingid: meetingid,
             key: key,
             option: data.option,
-            created_at: timeNow(),
+            created_at: Date.now()
+            // created_at: timeNow(),
           },
           events: "CreateRoom",
           status: "Success",
@@ -161,7 +162,7 @@ router.post("/join", async function (req, res, next) {
                 urlroom: url,
                 name_join: data.name,
                 meetingid: data.meetingid,
-                join_at: timeNow(),
+                join_at: Date.now(),
                 option: data.option,
               },
               events: "JoinRoom",
