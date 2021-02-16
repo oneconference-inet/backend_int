@@ -230,7 +230,7 @@ router.post("/join", async function (req, res, next) {
         roomdata = await roomOnebinar.findOne({ meeting_id: data.meetingid });
         if (roomdata) {
           if (roomdata.keyroom !== data.key) {
-            res.send({ status: "ERROR", error: "WrongKey" });
+            res.status(400).send({ status: "ERROR", error: "WrongKey" });
           } else {
             const urlroomToken = {
               role: "attendee",
@@ -281,7 +281,7 @@ router.post("/join", async function (req, res, next) {
         roomdata = await roomManageai.findOne({ meeting_id: data.meetingid });
         if (roomdata) {
           if (roomdata.keyroom !== data.key) {
-            res.send({ status: "ERROR", error: "WrongKey" });
+            res.status(400).send({ status: "ERROR", error: "WrongKey" });
           } else {
             const urlroomToken = {
               role: "attendee",
