@@ -89,6 +89,7 @@ router.post("/create", async function (req, res, next) {
         };
         const token = code.encodeJS(urlroomToken);
         url = url + token;
+        console.log(url);
         await session.save();
         res.status(200).send({
           data: {
@@ -118,7 +119,7 @@ router.post("/create", async function (req, res, next) {
           roomname: data.roomname,
           keyroom: key,
           nickname: data.name,
-          option: data.option,
+          option: optionResult(),
           clientid: data.name + "-" + "host",
           service: tagService,
           userXmpAuth: process.env.user_jitsi,
@@ -126,6 +127,7 @@ router.post("/create", async function (req, res, next) {
         };
         const token = code.encodeJS(urlroomToken);
         url = url + token;
+        console.log(url);
         await session.save();
         res.status(200).send({
           data: {
