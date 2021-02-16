@@ -151,11 +151,11 @@ router.post("/create", async function (req, res, next) {
       });
     }
   } catch (error) {
-    console.log(error);
-    next(error);
-    res.send({
+    // console.log(error);
+    // next(error);
+    res.status(401).send({
       status: "Error",
-      error: error,
+      error: 'Unauthorize',
     });
   }
 });
@@ -335,11 +335,11 @@ router.post("/join", async function (req, res, next) {
       });
     }
   } catch (error) {
-    console.log(error);
-    next(error);
-    res.send({
+    // console.log(error);
+    // next(error);
+    res.status(401).send({
       status: "Error",
-      error: error,
+      error: 'Unauthorize',
     });
   }
 });
@@ -394,7 +394,7 @@ router.post("/checkKey", async function (req, res) {
     }
   } catch (error) {
     console.log(error);
-    res.send({
+    res.status(400).send({
       status: "Error",
       error: error,
     });
@@ -456,7 +456,7 @@ router.post("/endmeeting", async function (req, res, next) {
     });
   } catch (error) {
     console.log(error);
-    res.send({
+    res.status(400).send({
       status: "Error",
       error: error,
     });
@@ -518,7 +518,7 @@ router.post("/endjoin", async function (req, res, next) {
     });
   } catch (error) {
     console.log(error);
-    res.send({
+    res.status(400).send({
       status: "Error",
       error: error,
     });
