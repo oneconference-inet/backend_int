@@ -3,10 +3,10 @@ var router = express.Router();
 const sha1 = require("sha1");
 var roomonechat = require("../models/session_roomonechat");
 var roomManageai = require("../models/session_roomManageAi");
+var roomOnebinar = require("../models/session_roomOnebinar");
 // var roomonecon = require('../models/session_room')
 const auth = require("../service/auth_onechat");
 const code = require("../service/hashcode");
-const e = require("express");
 
 // const sercretkey = 'ONECHATSERVICE'
 // a[0].conference.oe.authEnabled
@@ -22,11 +22,11 @@ router.post("/create", async function (req, res, next) {
       const optionResult = () => {
         let media = {
           video: false,
-          audio: true
-        }
-        data.option == 'video' ? media.video = true : media.video = false
-        return media
-      }
+          audio: true,
+        };
+        data.option == "video" ? (media.video = true) : (media.video = false);
+        return media;
+      };
       if (tagService == null || tagService == "onechat") {
         tagService = "onechat";
         let session = new roomonechat({
@@ -101,6 +101,43 @@ router.post("/create", async function (req, res, next) {
           events: "CreateRoom",
           status: "Success",
         });
+      } else if (tagService == "onebinar") {
+        tagService = "onebinar";
+        let session = new roomOnebinar({
+          hostname: data.name,
+          roomname: data.roomname,
+          urlroom: url,
+          keyroom: key,
+          member: [{ name: data.name, join_at: timeNow(), out_at: "" }],
+          meeting_id: meetingid,
+          created_at: Date.now(),
+        });
+        const urlroomToken = {
+          role: "moderator",
+          meetingId: meetingid,
+          roomname: data.roomname,
+          keyroom: key,
+          nickname: data.name,
+          option: data.option,
+          clientid: data.name + "-" + "host",
+          service: tagService,
+          userXmpAuth: process.env.user_jitsi,
+          passXmpAuth: process.env.password_jitsi,
+        };
+        const token = code.encodeJS(urlroomToken);
+        url = url + token;
+        await session.save();
+        res.status(200).send({
+          data: {
+            urlroom: url,
+            meetingid: meetingid,
+            key: key,
+            option: data.option,
+            created_at: timeNow(),
+          },
+          events: "CreateRoom",
+          status: "Success",
+        });
       } else {
         res.status(401).send({
           status: "error",
@@ -135,11 +172,11 @@ router.post("/join", async function (req, res, next) {
       const optionResult = () => {
         let media = {
           video: false,
-          audio: true
-        }
-        data.option == 'video' ? media.video = true : media.video = false
-        return media
-      }
+          audio: true,
+        };
+        data.option == "video" ? (media.video = true) : (media.video = false);
+        return media;
+      };
       if (tagService == null || tagService == "onechat") {
         roomdata = await roomonechat.findOne({ meeting_id: data.meetingid });
         if (roomdata) {
@@ -189,7 +226,58 @@ router.post("/join", async function (req, res, next) {
             .status(400)
             .json({ status: "error", message: "meetingid is wrong" });
         }
-      } else if (tagService == "ManageAi") {
+      } else if (tagService == "onebinar") {
+        roomdata = await roomOnebinar.findOne({ meeting_id: data.meetingid });
+        if (roomdata) {
+          if (roomdata.keyroom !== data.key) {
+            res.send({ status: "ERROR", error: "WrongKey" });
+          } else {
+            const urlroomToken = {
+              role: "attendee",
+              meetingId: data.meetingid,
+              roomname: roomdata.roomname,
+              keyroom: roomdata.keyroom,
+              nickname: data.name,
+              option: optionResult(),
+              clientid: `${data.name}`,
+              service: "onebinar",
+            };
+            const token = code.encodeJS(urlroomToken);
+            url = url + "?" + token;
+            let joindata = updateJoinTime(roomdata.member, data.name);
+            if (joindata.statusJoin) {
+              await roomOnebinar.updateOne(
+                { meeting_id: data.meetingid },
+                { member: joindata.arrMember }
+              );
+            } else {
+              arrJoin = joindata.arrMember;
+              arrJoin.push({ name: data.name, join_at: timeNow(), out_at: "" });
+              await roomOnebinar.updateOne(
+                { meeting_id: data.meetingid },
+                { member: arrJoin }
+              );
+            }
+            res.status(200).send({
+              data: {
+                urlroom: url,
+                name_join: data.name,
+                meetingid: data.meetingid,
+                join_at: timeNow(),
+                option: optionResult(),
+              },
+              events: "JoinRoom",
+              status: "Success",
+            });
+          }
+        }
+         else {
+          res
+            .status(400)
+            .json({ status: "error", message: "meetingid is wrong" });
+        }
+      }
+      else if (tagService == "ManageAi") {
         roomdata = await roomManageai.findOne({ meeting_id: data.meetingid });
         if (roomdata) {
           if (roomdata.keyroom !== data.key) {
@@ -233,7 +321,8 @@ router.post("/join", async function (req, res, next) {
               status: "Success",
             });
           }
-        } else {
+        }
+         else {
           res
             .status(400)
             .json({ status: "error", message: "meetingid is wrong" });
@@ -294,6 +383,15 @@ router.post("/checkKey", async function (req, res) {
       );
       res.send({ key: roomdata.keyroom });
     }
+    else if (req.body.clientname == "onebinar") {
+      roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
+      let joindata = updateJoinTime(roomdata.member, nameJoin);
+      await roomManageai.updateOne(
+        { meeting_id: meetingid },
+        { member: joindata.arrMember }
+      );
+      res.send({ key: roomdata.keyroom });
+    }
   } catch (error) {
     console.log(error);
     res.send({
@@ -338,6 +436,14 @@ router.post("/endmeeting", async function (req, res, next) {
       await roomonechat.updateOne({ meeting_id: meetingid }, roomdata);
     } else if (req.body.clientname == "ManageAi") {
       roomdata = await roomManageai.findOne({ meeting_id: meetingid });
+      arrJoin = roomdata.member;
+      arrJoin.forEach((e) => {
+        e.out_at = timeNow();
+      });
+      await roomManageai.updateOne({ meeting_id: meetingid }, roomdata);
+    }
+    else if (req.body.clientname == "onebinar") {
+      roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
       arrJoin = roomdata.member;
       arrJoin.forEach((e) => {
         e.out_at = timeNow();
@@ -392,6 +498,14 @@ router.post("/endjoin", async function (req, res, next) {
       );
     } else if (req.body.clientname == "ManageAi") {
       roomdata = await roomManageai.findOne({ meeting_id: meetingid });
+      let enddata = updateEndJoin(roomdata.member, namejoin);
+      await roomManageai.updateOne(
+        { meeting_id: meetingid },
+        { member: enddata }
+      );
+    }
+    else if (req.body.clientname == "onebinar") {
+      roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
       let enddata = updateEndJoin(roomdata.member, namejoin);
       await roomManageai.updateOne(
         { meeting_id: meetingid },
