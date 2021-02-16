@@ -14,7 +14,7 @@ router.post("/create", async function (req, res, next) {
   let data = req.body;
   try {
     const tokenkey = req.headers["authorization"].split(" ")[1];
-    if (auth(tokenkey)) {
+    if (auth(tokenkey,data.tag)) {
       let meetingid = sha1(data.roomname) + "-" + Date.now();
       let tagService = data.tag;
       let key = sha1(meetingid + data.name);
@@ -162,9 +162,9 @@ router.post("/create", async function (req, res, next) {
 
 router.post("/join", async function (req, res, next) {
   try {
+    let data = req.body;
     const tokenkey = req.headers["authorization"].split(" ")[1];
-    if (auth(tokenkey)) {
-      let data = req.body;
+    if (auth(tokenkey,data.tag)) {
       let tagService = data.tag;
       let roomdata;
       let arrJoin;
