@@ -89,7 +89,6 @@ router.post("/create", async function (req, res, next) {
         };
         const token = code.encodeJS(urlroomToken);
         url = url + token;
-        console.log(url);
         await session.save();
         res.status(200).send({
           data: {
@@ -127,7 +126,6 @@ router.post("/create", async function (req, res, next) {
         };
         const token = code.encodeJS(urlroomToken);
         url = url + token;
-        console.log(url);
         await session.save();
         res.status(200).send({
           data: {
