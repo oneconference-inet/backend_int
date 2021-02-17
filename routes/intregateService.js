@@ -243,7 +243,7 @@ router.post("/join", async function (req, res, next) {
               service: "onebinar",
             };
             const token = code.encodeJS(urlroomToken);
-            url = url + "?" + token;
+            url = url + token;
             let joindata = updateJoinTime(roomdata.member, data.name);
             if (joindata.statusJoin) {
               await roomOnebinar.updateOne(
@@ -294,7 +294,7 @@ router.post("/join", async function (req, res, next) {
               service: "manageAi",
             };
             const token = code.encodeJS(urlroomToken);
-            url = url + "?" + token;
+            url = url + token;
             let joindata = updateJoinTime(roomdata.member, data.name);
             if (joindata.statusJoin) {
               await roomManageai.updateOne(
