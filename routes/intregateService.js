@@ -496,7 +496,7 @@ router.post("/endjoin", async function (req, res, next) {
         { meeting_id: meetingid },
         { member: enddata }
       );
-    } else if (req.body.clientname == "ManageAi") {
+    } else if (req.body.clientname == "manageAi") {
       roomdata = await roomManageai.findOne({ meeting_id: meetingid });
       let enddata = updateEndJoin(roomdata.member, namejoin);
       await roomManageai.updateOne(
