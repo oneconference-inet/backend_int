@@ -7,6 +7,7 @@ var roomOnebinar = require("../models/session_roomOnebinar");
 // var roomonecon = require('../models/session_room')
 const auth = require("../service/auth_onechat");
 const code = require("../service/hashcode");
+const logger = require('../service/loggerfile');
 
 // const sercretkey = 'ONECHATSERVICE'
 // a[0].conference.oe.authEnabled

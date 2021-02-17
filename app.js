@@ -45,37 +45,8 @@ app.get('/image/profile/:user_id',async function(req, res) {
   res.sendFile(path.join(__dirname, "./assets/profile/" + img));
 })
 
-if (process.env.NODE_ENV == 'development') {
-  //use api route
-  app.use('/', indexRouter);
-  app.use('/api/users', usersRouter);
-  app.use('/api/roles', rolesRouter);
-  app.use('/api/rooms', roomsRouter);
-  app.use('/api/auth', loginRouter);
-  app.use('/api/feedback', feedbacksRouter);
-  app.use('/api/avatar', upload_photoRouter);
-  app.use('/api/votes' , votes)
-  app.use('/api/votes_manage' , votes_mg)
-  app.use('/api/onechatroom' , intregateService)
-  app.use('/api/synconeid' , synconeid)
-  app.use('/api/onebox' , onebox)
-  app.use('/api/otp' , otp)
-}else{
-  //use api route
-  app.use('/backend/api/users', usersRouter);
-  app.use('/backend/api/roles', rolesRouter);
-  app.use('/backend/api/rooms', roomsRouter);
-  app.use('/backend/api/auth', loginRouter);
-  app.use('/backend/api/feedback', feedbacksRouter);
-  app.use('/backend/api/avatar', upload_photoRouter);
-  app.use('/backend/api/votes' , votes)
-  app.use('/backend/api/votes_manage' , votes_mg)
-  app.use('/api/onechatroom' , intregateService)
-  app.use('/api/socket', socketRouter)
-  app.use('/backend/api/synconeid' , synconeid)
-  app.use('/backend/api/onebox' , onebox)
-  app.use('/backend/api/otp' , otp)
-}
+//use api route
+app.use('/api/onechatroom' , intregateService)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
