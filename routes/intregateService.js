@@ -64,8 +64,8 @@ router.post("/create", async function (req, res, next) {
           events: "CreateRoom",
           status: "Success",
         });
-      } else if (tagService == "ManageAi") {
-        tagService = "ManageAi";
+      } else if (tagService == "manageAi") {
+        tagService = "manageAi";
         let session = new roomManageai({
           hostname: data.name,
           roomname: data.roomname,
@@ -277,7 +277,7 @@ router.post("/join", async function (req, res, next) {
             .json({ status: "error", message: "meetingid is wrong" });
         }
       }
-      else if (tagService == "ManageAi") {
+      else if (tagService == "manageAi") {
         roomdata = await roomManageai.findOne({ meeting_id: data.meetingid });
         if (roomdata) {
           if (roomdata.keyroom !== data.key) {
@@ -291,7 +291,7 @@ router.post("/join", async function (req, res, next) {
               nickname: data.name,
               option: optionResult(),
               clientid: `${data.name}`,
-              service: "ManageAi",
+              service: "manageAi",
             };
             const token = code.encodeJS(urlroomToken);
             url = url + "?" + token;
@@ -374,7 +374,7 @@ router.post("/checkKey", async function (req, res) {
         { member: joindata.arrMember }
       );
       res.send({ key: roomdata.keyroom });
-    } else if (req.body.clientname == "ManageAi") {
+    } else if (req.body.clientname == "manageAi") {
       roomdata = await roomManageai.findOne({ meeting_id: meetingid });
       let joindata = updateJoinTime(roomdata.member, nameJoin);
       await roomManageai.updateOne(
@@ -434,7 +434,7 @@ router.post("/endmeeting", async function (req, res, next) {
         e.out_at = timeNow();
       });
       await roomonechat.updateOne({ meeting_id: meetingid }, roomdata);
-    } else if (req.body.clientname == "ManageAi") {
+    } else if (req.body.clientname == "manageAi") {
       roomdata = await roomManageai.findOne({ meeting_id: meetingid });
       arrJoin = roomdata.member;
       arrJoin.forEach((e) => {
