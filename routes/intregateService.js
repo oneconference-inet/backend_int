@@ -7,6 +7,7 @@ var roomOnebinar = require("../models/session_roomOnebinar");
 // var roomonecon = require('../models/session_room')
 const auth = require("../service/auth_onechat");
 const code = require("../service/hashcode");
+const URL = require("url").URL;
 
 // const sercretkey = 'ONECHATSERVICE'
 // a[0].conference.oe.authEnabled
@@ -66,6 +67,9 @@ router.post("/create", async function (req, res, next) {
         });
       } else if (tagService == "manageAi") {
         tagService = "manageAi";
+        if (!ValidUrl(data.url) &&  data.url != '' && data.url != null) {
+          return res.status(400).json({status:'error',message:'url invalid.'})
+        }
         let url_redirect = data.url == "" || data.url == null ? process.env.domain_frontend : data.url
         let session = new roomManageai({
           hostname: data.name,
@@ -280,8 +284,11 @@ router.post("/join", async function (req, res, next) {
         }
       }
       else if (tagService == "manageAi") {
-        roomdata = await roomManageai.findOne({ meeting_id: data.meetingid });
+        if (!ValidUrl(data.url) &&  data.url != '' && data.url != null) {
+          return res.status(400).json({status:'error',message:'url invalid.'})
+        }
         let url_redirect = data.url == "" || data.url == null ? process.env.domain_frontend : data.url
+        roomdata = await roomManageai.findOne({ meeting_id: data.meetingid });
         if (roomdata) {
           if (roomdata.keyroom !== data.key) {
             res.status(400).send({ status: "ERROR", error: "WrongKey" });
@@ -557,4 +564,13 @@ function timeNow () {
 
   return resultTime;
 }
+
+const ValidUrl = (s) => {
+  try {
+    new URL(s);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
 module.exports = router;
