@@ -10,23 +10,8 @@ var cors = require('cors')
 
 
 //routes
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const rolesRouter = require('./routes/roles');
-const roomsRouter = require('./routes/rooms');
-const feedbacksRouter = require('./routes/feedback');
-const upload_photoRouter = require('./routes/upload_photo');
-const loginRouter = require('./service/authentication');
-const synconeid = require('./routes/synconeid')
-const votes_mg = require('./routes/votes')
-const votes = require('./routes/votes_jitsi')
-// const onechatroom = require('./routes/OnechatRoom')
 const intregateService = require('./routes/intregateService')
-const onebox = require('./routes/onebox')
-const otp = require('./routes/OTP')
-const genclientIdRouter = require('./routes/gen_clientId')
-const onemailRouter = require('./service/sync_services')
-const socketRouter = require('./routes/socket')
+
 
 var app = express();
 
@@ -40,10 +25,7 @@ app.use(express.json()); // middlewares
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, './public')));
-app.get('/image/profile/:user_id',async function(req, res) {
-  let img = req.params.user_id
-  res.sendFile(path.join(__dirname, "./assets/profile/" + img));
-})
+
 
 //use api route
 app.use('/api/onechatroom' , intregateService)

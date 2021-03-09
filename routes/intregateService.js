@@ -66,10 +66,7 @@ router.post("/create", async function (req, res, next) {
         });
       } else if (tagService == "manageAi") {
         tagService = "manageAi";
-        let url_redirect = data.url;
-        if (url_redirect == "" || url_redirect == null) {
-          url_redirect = process.env.domain_frontend;
-        }
+        let url_redirect = data.url == "" || data.url == null ? process.env.domain_frontend : data.url
         let session = new roomManageai({
           hostname: data.name,
           roomname: data.roomname,
@@ -284,10 +281,7 @@ router.post("/join", async function (req, res, next) {
       }
       else if (tagService == "manageAi") {
         roomdata = await roomManageai.findOne({ meeting_id: data.meetingid });
-        let url_redirect = data.url;
-        if (url_redirect == "" || url_redirect == null) {
-          url_redirect = process.env.domain_frontend;
-        }
+        let url_redirect = data.url == "" || data.url == null ? process.env.domain_frontend : data.url
         if (roomdata) {
           if (roomdata.keyroom !== data.key) {
             res.status(400).send({ status: "ERROR", error: "WrongKey" });
@@ -303,6 +297,7 @@ router.post("/join", async function (req, res, next) {
               service: "manageAi",
               redirect: url_redirect
             };
+            console.log(urlroomToken);
             const token = code.encodeJS(urlroomToken);
             url = url + token;
             let joindata = updateJoinTime(roomdata.member, data.name);
