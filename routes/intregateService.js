@@ -297,7 +297,6 @@ router.post("/join", async function (req, res, next) {
               service: "manageAi",
               redirect: url_redirect
             };
-            console.log(urlroomToken);
             const token = code.encodeJS(urlroomToken);
             url = url + token;
             let joindata = updateJoinTime(roomdata.member, data.name);
