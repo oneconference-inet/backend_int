@@ -8,6 +8,7 @@ var roomOnebinar = require("../models/session_roomOnebinar");
 const auth = require("../service/auth_onechat");
 const code = require("../service/hashcode");
 const URL = require("url").URL;
+const logger = require('../service/loggerfile');
 
 router.post("/create", async function (req, res, next) {
   let data = req.body;
@@ -55,6 +56,7 @@ router.post("/create", async function (req, res, next) {
         const token = code.encodeJS(urlroomToken);
         url = url + token;
         await session.save();
+        logger.info(`service: ${tagService}, name: ${data.name}, meetingid: ${meetingid} message: create url meeting.`)
         res.status(200).send({
           data: {
             urlroom: url,
@@ -97,6 +99,7 @@ router.post("/create", async function (req, res, next) {
         const token = code.encodeJS(urlroomToken);
         url = url + token;
         await session.save();
+        logger.info(`service: ${tagService}, name: ${data.name}, meetingid: ${meetingid} message: create url meeting.`)
         res.status(200).send({
           data: {
             urlroom: url,
@@ -136,6 +139,7 @@ router.post("/create", async function (req, res, next) {
         const token = code.encodeJS(urlroomToken);
         url = url + token;
         await session.save();
+        logger.info(`service: ${tagService}, name: ${data.name}, meetingid: ${meetingid} message: create url meeting.`)
         res.status(200).send({
           data: {
             urlroom: url,
@@ -188,9 +192,11 @@ router.post("/join", async function (req, res, next) {
         return media;
       };
       if (tagService == null || tagService == "onechat") {
+        tagService == "onechat"
         roomdata = await roomonechat.findOne({ meeting_id: data.meetingid });
         if (roomdata) {
           if (roomdata.keyroom !== data.key) {
+            logger.error(`service: ${tagService}, name:${data.name} meetingid: ${data.meetingid} message: password invalid.`)
             res.status(400).send({ status: "ERROR", error: "WrongKey" });
           } else {
             const urlroomToken = {
@@ -213,6 +219,7 @@ router.post("/join", async function (req, res, next) {
                 { meeting_id: data.meetingid },
                 { member: joindata.arrMember }
               );
+              logger.info(`service: ${tagService}, name: ${data.name}, meetingid: ${data.meetingid} message: join meeting again.`)
             } else {
               arrJoin = joindata.arrMember;
               arrJoin.push({ name: data.name, join_at: timeNow(), out_at: "" });
@@ -221,6 +228,7 @@ router.post("/join", async function (req, res, next) {
                 { member: arrJoin }
               );
             }
+            logger.info(`service: ${tagService}, name: ${data.name}, meetingid: ${data.meetingid} message: join meeting.`)
             res.status(200).send({
               data: {
                 urlroom: url,
@@ -234,6 +242,7 @@ router.post("/join", async function (req, res, next) {
             });
           }
         } else {
+          logger.error(`service: ${tagService}, name:${data.name} meetingid: ${data.meetingid} message: meetingid is wrong.`)
           res
             .status(400)
             .json({ status: "error", message: "meetingid is wrong" });
@@ -242,6 +251,7 @@ router.post("/join", async function (req, res, next) {
         roomdata = await roomOnebinar.findOne({ meeting_id: data.meetingid });
         if (roomdata) {
           if (roomdata.keyroom !== data.key) {
+            logger.error(`service: ${tagService}, name:${data.name} meetingid: ${data.meetingid} message: password invalid.`)
             res.status(400).send({ status: "ERROR", error: "WrongKey" });
           } else {
             const urlroomToken = {
@@ -263,6 +273,7 @@ router.post("/join", async function (req, res, next) {
                 { meeting_id: data.meetingid },
                 { member: joindata.arrMember }
               );
+              logger.info(`service: ${tagService}, name: ${data.name}, meetingid: ${data.meetingid} message: join meeting again.`)
             } else {
               arrJoin = joindata.arrMember;
               arrJoin.push({ name: data.name, join_at: timeNow(), out_at: "" });
@@ -271,6 +282,7 @@ router.post("/join", async function (req, res, next) {
                 { member: arrJoin }
               );
             }
+            logger.info(`service: ${tagService}, name: ${data.name}, meetingid: ${data.meetingid} message: join meeting.`)
             res.status(200).send({
               data: {
                 urlroom: url,
@@ -285,6 +297,7 @@ router.post("/join", async function (req, res, next) {
           }
         }
         else {
+          logger.error(`service: ${tagService}, name:${data.name} meetingid: ${data.meetingid} message: meetingid is wrong.`)
           res
             .status(400)
             .json({ status: "error", message: "meetingid is wrong" });
@@ -297,6 +310,7 @@ router.post("/join", async function (req, res, next) {
         roomdata = await roomManageai.findOne({ meeting_id: data.meetingid });
         if (roomdata) {
           if (roomdata.keyroom !== data.key) {
+            logger.error(`service: ${tagService}, name:${data.name} meetingid: ${data.meetingid} message: password invalid.`)
             res.status(400).send({ status: "ERROR", error: "WrongKey" });
           } else {
             const urlroomToken = {
@@ -318,6 +332,7 @@ router.post("/join", async function (req, res, next) {
                 { meeting_id: data.meetingid },
                 { member: joindata.arrMember }
               );
+              logger.info(`service: ${tagService}, name: ${data.name}, meetingid: ${data.meetingid} message: join meeting again.`)
             } else {
               arrJoin = joindata.arrMember;
               arrJoin.push({ name: data.name, join_at: timeNow(), out_at: "" });
@@ -326,6 +341,7 @@ router.post("/join", async function (req, res, next) {
                 { member: arrJoin }
               );
             }
+            logger.info(`service: ${tagService}, name: ${data.name}, meetingid: ${data.meetingid} message: join meeting.`)
             res.status(200).send({
               data: {
                 urlroom: url,
@@ -340,9 +356,10 @@ router.post("/join", async function (req, res, next) {
           }
         }
         else {
+          logger.error(`service: ${tagService}, name:${data.name} meetingid: ${data.meetingid} message: meetingid is wrong.`)
           res
             .status(400)
-            .json({ status: "error", message: "meetingid is wrong" });
+            .json({ status: "error", message: "meetingid is wrong." });
         }
       }
     } else {
@@ -352,7 +369,7 @@ router.post("/join", async function (req, res, next) {
       });
     }
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     // next(error);
     res.status(401).send({
       status: "Error",
