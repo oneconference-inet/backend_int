@@ -724,32 +724,33 @@ router.post('/checkmeetting',verifyToken,async function(req,res){
 })
 
 router.post('/logout',async function(req,res){
+  const meeting_id = req.body.meetingid
   try {
-    let session = await Sessionroom.findOne({'meeting_id': req.body.meetingid},['meeting_id','room_id','member','uid','user_id'])
-    if (session) {
-      if (session.room_id !='') {
-        let room = await Rooms.findOne({'_id':session.room_id})
-        if(room){
-          room.last_session = Date.now()
-          await room.save()
+    const datenow = Date.now()
+    let checksession = await Sessionroom.findOne({ 'meeting_id': meeting_id }, '_id')
+    if (checksession) {
+      let session = await Sessionroom.findOneAndUpdate({'meeting_id': meeting_id, 'member.out_at': '' },
+        { $set:{'member.$[el].out_at': datenow } },
+        { 
+          "fields": { "meeting_id":1, "room_id": 1,'member':1,'uid':1,'user_id':1 },
+          arrayFilters: [{ "el.out_at": '' }],
+          new: true
         }
-      }
-      let history = await Historyroom.findOne({'meeting_id':session.meeting_id})
-      if (history) {
-        history.end_date = date_time.date(Date.now())
-        history.end_time = date_time.time(Date.now())
-        history.member = session.member
-        history.attendee = (session.member).length
-        await history.save()
-      }
-      await Sessionservice.findOneAndDelete({'uid':session.uid})
-      await Schedulemeeting.findOneAndDelete({'meeting_id':session.meeting_id})
-      logger.info('user_id: '+session.user_id+',meetingid: '+session.meeting_id+' ,message: Endmeeting room session')
-      await session.delete()
-      res.send({status:'success',message:'room session logout'})
-    }else{
+      )
+      await Rooms.updateOne({ _id: session.room_id }, { "last_session": Date.now()})
+      await Historyroom.updateOne({'meeting_id' : meeting_id}, {
+        'end_date' : date_time.date(datenow),
+        'end_time' : date_time.time(datenow),
+        'member' : session.member,
+        'attendee' : (session.member).length
+      })
+      await Sessionservice.deleteOne({'uid': session.uid})
+      await Schedulemeeting.deleteOne({'meeting_id': session.meeting_id})
+      logger.info('user_id: '+session.user_id+', meetingid: '+session.meeting_id+' , message: Endmeeting room session')
+      await checksession.delete()
+      res.send({status:'success', message:'room session logout'})
+    }else
       res.status(400).send({status:'error',message:'No room in session'})
-    }
   } catch (error) {
     console.log(error);
     res.status(403).send(error)
