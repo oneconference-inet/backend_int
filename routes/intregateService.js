@@ -7,6 +7,7 @@ var roomOnebinar = require("../models/session_roomOnebinar");
 // var roomonecon = require('../models/session_room')
 const auth = require("../service/auth_onechat");
 const code = require("../service/hashcode");
+const URL = require("url").URL;
 
 // const sercretkey = 'ONECHATSERVICE'
 // a[0].conference.oe.authEnabled
@@ -14,11 +15,12 @@ router.post("/create", async function (req, res, next) {
   let data = req.body;
   try {
     const tokenkey = req.headers["authorization"].split(" ")[1];
-    if (auth(tokenkey,data.tag)) {
+    if (auth(tokenkey, data.tag)) {
       let meetingid = sha1(data.roomname) + "-" + Date.now();
       let tagService = data.tag;
       let key = sha1(meetingid + data.name);
       let url = process.env.ONECHAT_ROOM_DOMAIN + meetingid + "?";
+      let url_redirect = data.url == "" || data.url == null ? process.env.domain_frontend : data.url
       const optionResult = () => {
         let media = {
           video: false,
@@ -49,6 +51,8 @@ router.post("/create", async function (req, res, next) {
           service: tagService,
           userXmpAuth: process.env.user_jitsi,
           passXmpAuth: process.env.password_jitsi,
+          secretRoom: false,
+          redirect: url_redirect,
         };
         const token = code.encodeJS(urlroomToken);
         url = url + token;
@@ -66,6 +70,9 @@ router.post("/create", async function (req, res, next) {
         });
       } else if (tagService == "manageAi") {
         tagService = "manageAi";
+        if (!ValidUrl(data.url) &&  data.url != '' && data.url != null) {
+          return res.status(400).json({status:'error',message:'url invalid.'})
+        }
         let session = new roomManageai({
           hostname: data.name,
           roomname: data.roomname,
@@ -86,6 +93,8 @@ router.post("/create", async function (req, res, next) {
           service: tagService,
           userXmpAuth: process.env.user_jitsi,
           passXmpAuth: process.env.password_jitsi,
+          secretRoom: false,
+          redirect: url_redirect,
         };
         const token = code.encodeJS(urlroomToken);
         url = url + token;
@@ -123,6 +132,8 @@ router.post("/create", async function (req, res, next) {
           service: tagService,
           userXmpAuth: process.env.user_jitsi,
           passXmpAuth: process.env.password_jitsi,
+          secretRoom: false,
+          redirect: url_redirect,
         };
         const token = code.encodeJS(urlroomToken);
         url = url + token;
@@ -164,11 +175,12 @@ router.post("/join", async function (req, res, next) {
   try {
     let data = req.body;
     const tokenkey = req.headers["authorization"].split(" ")[1];
-    if (auth(tokenkey,data.tag)) {
+    if (auth(tokenkey, data.tag)) {
       let tagService = data.tag;
       let roomdata;
       let arrJoin;
       let url = process.env.ONECHAT_ROOM_DOMAIN + data.meetingid + "?";
+      let url_redirect = data.url == "" || data.url == null ? process.env.domain_frontend : data.url
       const optionResult = () => {
         let media = {
           video: false,
@@ -192,6 +204,8 @@ router.post("/join", async function (req, res, next) {
               option: optionResult(),
               clientid: `${data.name}`,
               service: "onechat",
+              secretRoom: false,
+              redirect: url_redirect,
             };
             const token = code.encodeJS(urlroomToken);
             url = url + token;
@@ -241,6 +255,7 @@ router.post("/join", async function (req, res, next) {
               option: optionResult(),
               clientid: `${data.name}`,
               service: "onebinar",
+              redirect: url_redirect
             };
             const token = code.encodeJS(urlroomToken);
             url = url + token;
@@ -271,13 +286,16 @@ router.post("/join", async function (req, res, next) {
             });
           }
         }
-         else {
+        else {
           res
             .status(400)
             .json({ status: "error", message: "meetingid is wrong" });
         }
       }
       else if (tagService == "manageAi") {
+        if (!ValidUrl(data.url) &&  data.url != '' && data.url != null) {
+          return res.status(400).json({status:'error',message:'url invalid.'})
+        }
         roomdata = await roomManageai.findOne({ meeting_id: data.meetingid });
         if (roomdata) {
           if (roomdata.keyroom !== data.key) {
@@ -292,6 +310,7 @@ router.post("/join", async function (req, res, next) {
               option: optionResult(),
               clientid: `${data.name}`,
               service: "manageAi",
+              redirect: url_redirect
             };
             const token = code.encodeJS(urlroomToken);
             url = url + token;
@@ -322,7 +341,7 @@ router.post("/join", async function (req, res, next) {
             });
           }
         }
-         else {
+        else {
           res
             .status(400)
             .json({ status: "error", message: "meetingid is wrong" });
@@ -525,7 +544,7 @@ router.post("/endjoin", async function (req, res, next) {
   }
 });
 
-function updateJoinTime(arrMember, namejoin, statusJoin = false) {
+function updateJoinTime (arrMember, namejoin, statusJoin = false) {
   arrMember.forEach((e) => {
     if (e.name == namejoin) {
       statusJoin = true;
@@ -538,7 +557,7 @@ function updateJoinTime(arrMember, namejoin, statusJoin = false) {
   };
 }
 
-function updateEndJoin(arrMember, namejoin) {
+function updateEndJoin (arrMember, namejoin) {
   arrMember.forEach((e) => {
     if (e.name == namejoin) {
       e.out_at = timeNow();
@@ -547,10 +566,19 @@ function updateEndJoin(arrMember, namejoin) {
   return arrMember;
 }
 
-function timeNow() {
+function timeNow () {
   let now = new Date();
   let resultTime = now.toLocaleString();
 
   return resultTime;
 }
+
+const ValidUrl = (s) => {
+  try {
+    new URL(s);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
 module.exports = router;
