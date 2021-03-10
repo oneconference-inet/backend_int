@@ -9,8 +9,6 @@ const auth = require("../service/auth_onechat");
 const code = require("../service/hashcode");
 const URL = require("url").URL;
 
-// const sercretkey = 'ONECHATSERVICE'
-// a[0].conference.oe.authEnabled
 router.post("/create", async function (req, res, next) {
   let data = req.body;
   try {
