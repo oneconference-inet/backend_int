@@ -96,7 +96,6 @@ router.post("/create", async function (req, res, next) {
           secretRoom: false,
           redirect: url_redirect,
         };
-        console.log(urlroomToken);
         const token = code.encodeJS(urlroomToken);
         url = url + token;
         await session.save();
