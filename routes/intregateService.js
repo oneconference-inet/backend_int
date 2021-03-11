@@ -461,6 +461,7 @@ router.post("/endmeeting", async function (req, res, next) {
         e.out_at = timeNow();
       });
       await roomonecon.updateOne({ meeting_id: meetingid }, roomdata);
+      roomdata.delete()
     } else if (req.body.clientname == "onechat") {
       roomdata = await roomonechat.findOne({ meeting_id: meetingid });
       arrJoin = roomdata.member;
@@ -468,13 +469,16 @@ router.post("/endmeeting", async function (req, res, next) {
         e.out_at = timeNow();
       });
       await roomonechat.updateOne({ meeting_id: meetingid }, roomdata);
+      roomdata.delete()
     } else if (req.body.clientname == "manageAi") {
       roomdata = await roomManageai.findOne({ meeting_id: meetingid });
+      console.log(roomdata);
       arrJoin = roomdata.member;
       arrJoin.forEach((e) => {
         e.out_at = timeNow();
       });
       await roomManageai.updateOne({ meeting_id: meetingid }, roomdata);
+      roomdata.delete()
     }
     else if (req.body.clientname == "onebinar") {
       roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
@@ -483,6 +487,7 @@ router.post("/endmeeting", async function (req, res, next) {
         e.out_at = timeNow();
       });
       await roomManageai.updateOne({ meeting_id: meetingid }, roomdata);
+      roomdata.delete()
     }
     res.status(200).send({
       events: "EndMeeting",
