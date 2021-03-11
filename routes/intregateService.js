@@ -19,6 +19,9 @@ router.post("/create", async function (req, res, next) {
       let tagService = data.tag;
       let key = sha1(meetingid + data.name);
       let url = process.env.ONECHAT_ROOM_DOMAIN + meetingid + "?";
+      if (!ValidUrl(data.url) &&  data.url != '' && data.url != null) {
+        return res.status(400).json({status:'error',message:'url invalid.'})
+      }
       let url_redirect = data.url == "" || data.url == null ? process.env.domain_frontend : data.url
       const optionResult = () => {
         let media = {
@@ -70,9 +73,6 @@ router.post("/create", async function (req, res, next) {
         });
       } else if (tagService == "manageAi") {
         tagService = "manageAi";
-        if (!ValidUrl(data.url) &&  data.url != '' && data.url != null) {
-          return res.status(400).json({status:'error',message:'url invalid.'})
-        }
         let session = new roomManageai({
           hostname: data.name,
           roomname: data.roomname,
