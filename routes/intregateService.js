@@ -84,7 +84,7 @@ router.post("/create", async function (req, res, next) {
         });
         const urlroomToken = {
           role: "moderator",
-          meetingId: meetingid,
+          meetingId: meetingid + '-3OPBsOwHX6',
           roomname: data.roomname,
           keyroom: key,
           nickname: data.name,
