@@ -73,6 +73,7 @@ router.post("/create", async function (req, res, next) {
         });
       } else if (tagService == "manageAi") {
         tagService = "manageAi";
+        meetingid = meetingid + '-3OPBsOwHX6'
         let session = new roomManageai({
           hostname: data.name,
           roomname: data.roomname,
@@ -84,7 +85,7 @@ router.post("/create", async function (req, res, next) {
         });
         const urlroomToken = {
           role: "moderator",
-          meetingId: meetingid + '-3OPBsOwHX6',
+          meetingId: meetingid,
           roomname: data.roomname,
           keyroom: key,
           nickname: data.name,
