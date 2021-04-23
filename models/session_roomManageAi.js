@@ -7,6 +7,7 @@ var Schema = new mongoose.Schema({
     keyroom : { type:String, default: '' },
     meeting_id : { type:String, default: '' },
     member : { type:Array },
+    oneboxaccountid: { type: String, default: '' }
     created_at : { type:Date, default: Date.now() },
     updated_at : { type:Date, default: Date.now() },
 }, { collection: 'session_roomManageAi' })
