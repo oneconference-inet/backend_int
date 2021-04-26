@@ -544,12 +544,12 @@ router.post("/checkKey", async function (req, res) {
     let roomdata;
     let nameJoin = req.body.name;
     if (
-      req.body.clientname == "oneconference" ||
-      req.body.clientname == "onemail"
+      req.body.tag == "oneconference" ||
+      req.body.tag == "onemail"
     ) {
       roomdata = await roomonecon.findOne({ meeting_id: meetingid });
       res.send({ key: roomdata.key, urlInvite: roomdata.urlInvite });
-    } else if (req.body.clientname == "onechat") {
+    } else if (req.body.tag == "onechat") {
       roomdata = await roomonechat.findOne({ meeting_id: meetingid });
       let joindata = updateJoinTime(roomdata.member, nameJoin);
       await roomonechat.updateOne(
@@ -557,7 +557,7 @@ router.post("/checkKey", async function (req, res) {
         { member: joindata.arrMember }
       );
       res.send({ key: roomdata.keyroom });
-    } else if (req.body.clientname == "manageAi") {
+    } else if (req.body.tag == "manageAi") {
       roomdata = await roomManageai.findOne({ meeting_id: meetingid });
       let joindata = updateJoinTime(roomdata.member, nameJoin);
       await roomManageai.updateOne(
@@ -565,7 +565,7 @@ router.post("/checkKey", async function (req, res) {
         { member: joindata.arrMember }
       );
       res.send({ key: roomdata.keyroom });
-    } else if (req.body.clientname == "onedentral") {
+    } else if (req.body.tag == "onedentral") {
       roomdata = await roomOnedentral.findOne({ meeting_id: meetingid });
       let joindata = updateJoinTime(roomdata.member, nameJoin);
       await roomOnedentral.updateOne(
@@ -573,7 +573,7 @@ router.post("/checkKey", async function (req, res) {
         { member: joindata.arrMember }
       );
       res.send({ key: roomdata.keyroom });
-    } else if (req.body.clientname == "onebinar") {
+    } else if (req.body.tag == "onebinar") {
       roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
       let joindata = updateJoinTime(roomdata.member, nameJoin);
       await roomOnebinar.updateOne(
@@ -604,12 +604,12 @@ router.post("/endmeeting", async function (req, res, next) {
       "Content-Type, Option, Authorization"
     );
 
-    const { meetingid, clientname } = req.body;
+    const { meetingid, tag } = req.body;
     let roomdata;
     let arrJoin;
     const tokenkey = req.headers["authorization"] !== undefined ? req.headers["authorization"].split(" ")[1] : null
-    if (auth(tokenkey, clientname)) {
-      if (clientname == "onechat") {
+    if (auth(tokenkey, tag)) {
+      if (tag == "onechat") {
         roomdata = await roomonechat.findOne({ meeting_id: meetingid });
         if (roomdata) {
           arrJoin = roomdata.member;
@@ -628,7 +628,7 @@ router.post("/endmeeting", async function (req, res, next) {
             message: "meetingid is wrong.",
           });
         }
-      } else if (clientname == "manageAi") {
+      } else if (tag == "manageAi") {
         roomdata = await roomManageai.findOne({ meeting_id: meetingid });
         if (roomdata) {
           arrJoin = roomdata.member;
@@ -647,7 +647,7 @@ router.post("/endmeeting", async function (req, res, next) {
             message: "meetingid is wrong.",
           });
         }
-      } else if (clientname == "onedentral") {
+      } else if (tag == "onedentral") {
         roomdata = await roomOnedentral.findOne({ meeting_id: meetingid });
         if (roomdata) {
           arrJoin = roomdata.member;
@@ -666,7 +666,7 @@ router.post("/endmeeting", async function (req, res, next) {
             message: "meetingid is wrong.",
           });
         }
-      } else if (clientname == "onebinar") {
+      } else if (tag == "onebinar") {
         roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
         if (roomdata) {
           arrJoin = roomdata.member;
@@ -718,8 +718,8 @@ router.post("/endjoin", async function (req, res, next) {
     let namejoin = req.body.name;
     let roomdata;
     if (
-      req.body.clientname == "oneconference" ||
-      req.body.clientname == "onemail"
+      req.body.tag == "oneconference" ||
+      req.body.tag == "onemail"
     ) {
       roomdata = await roomonecon.findOne({ meeting_id: meetingid });
       let enddata = updateEndJoin(roomdata.member, namejoin);
@@ -727,28 +727,28 @@ router.post("/endjoin", async function (req, res, next) {
         { meeting_id: meetingid },
         { member: enddata }
       );
-    } else if (req.body.clientname == "onechat") {
+    } else if (req.body.tag == "onechat") {
       roomdata = await roomonechat.findOne({ meeting_id: meetingid });
       let enddata = updateEndJoin(roomdata.member, namejoin);
       await roomonechat.updateOne(
         { meeting_id: meetingid },
         { member: enddata }
       );
-    } else if (req.body.clientname == "manageAi") {
+    } else if (req.body.tag == "manageAi") {
       roomdata = await roomManageai.findOne({ meeting_id: meetingid });
       let enddata = updateEndJoin(roomdata.member, namejoin);
       await roomManageai.updateOne(
         { meeting_id: meetingid },
         { member: enddata }
       );
-    } else if (req.body.clientname == "onedentral") {
+    } else if (req.body.tag == "onedentral") {
       roomdata = await roomOnedentral.findOne({ meeting_id: meetingid });
       let enddata = updateEndJoin(roomdata.member, namejoin);
       await roomManageai.updateOne(
         { meeting_id: meetingid },
         { member: enddata }
       );
-    } else if (req.body.clientname == "onebinar") {
+    } else if (req.body.tag == "onebinar") {
       roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
       let enddata = updateEndJoin(roomdata.member, namejoin);
       await roomManageai.updateOne(
