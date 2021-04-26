@@ -7,6 +7,9 @@ var roomManageai = require("../models/session_roomManageAi");
 const auth = require("../service/auth_onechat");
 const code = require("../service/hashcode");
 const e = require("express");
+const onebox = require("../models/onebox");
+const onebox_serviece = require('../service/onebox')
+
 
 // const sercretkey = 'ONECHATSERVICE'
 // a[0].conference.oe.authEnabled
@@ -59,46 +62,54 @@ router.post("/create", async function (req, res, next) {
         });
       } else if (tagService == "ManageAi") {
         tagService = "ManageAi";
-        let session = new roomManageai({
-          hostname: data.name,
-          roomname: data.roomname,
-          urlroom: url,
-          keyroom: key,
-          member: [{ name: data.name, join_at: timeNow(), out_at: "" }],
-          meeting_id: meetingid,
-          created_at: Date.now(),
-        });
-        const urlroomToken = {
-          role: "moderator",
-          meetingId: meetingid,
-          roomname: data.roomname,
-          keyroom: key,
-          nickname: data.name,
-          option: data.option,
-          clientid: data.name + "-" + "host",
-          service: tagService,
-          userXmpAuth: process.env.user_jitsi,
-          passXmpAuth: process.env.password_jitsi,
-        };
-        const token = code.encodeJS(urlroomToken);
-        url = url + token;
-        await session.save();
-        res.status(200).send({
-          data: {
-            urlroom: url,
-            meetingid: meetingid,
-            key: key,
-            option: data.option,
-            created_at: timeNow(),
-          },
-          events: "CreateRoom",
-          status: "Success",
-        });
-      } else {
-        res.status(401).send({
-          status: "error",
-          error: "no service " + tagService,
-        });
+        console.log("tagService" , tagService);
+        let mainFolder = onebox_serviece.getMainfolder(data.account_id)
+        if (mainFolder){
+          console.log("1" ,mainFolder);
+        }
+        else{
+          console.log("2" ,mainFolder);
+        }
+      //   let session = new roomManageai({
+      //     hostname: data.name,
+      //     roomname: data.roomname,
+      //     urlroom: url,
+      //     keyroom: key,
+      //     member: [{ name: data.name, join_at: timeNow(), out_at: "" }],
+      //     meeting_id: meetingid,
+      //     created_at: Date.now(),
+      //   });
+      //   const urlroomToken = {
+      //     role: "moderator",
+      //     meetingId: meetingid,
+      //     roomname: data.roomname,
+      //     keyroom: key,
+      //     nickname: data.name,
+      //     option: data.option,
+      //     clientid: data.name + "-" + "host",
+      //     service: tagService,
+      //     userXmpAuth: process.env.user_jitsi,
+      //     passXmpAuth: process.env.password_jitsi,
+      //   };
+      //   const token = code.encodeJS(urlroomToken);
+      //   url = url + token;
+      //   await session.save();
+      //   res.status(200).send({
+      //     data: {
+      //       urlroom: url,
+      //       meetingid: meetingid,
+      //       key: key,
+      //       option: data.option,
+      //       created_at: timeNow(),
+      //     },
+      //     events: "CreateRoom",
+      //     status: "Success",
+      //   });
+      // } else {
+      //   res.status(401).send({
+      //     status: "error",
+      //     error: "no service " + tagService,
+      //   });
       }
     } else {
       res.status(401).send({

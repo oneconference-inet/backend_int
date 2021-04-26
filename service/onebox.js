@@ -147,6 +147,18 @@ async function createfolder(account_id,folder_id,foldername){
   }
 }
 
+async function getMainfolder(account_id){
+  const header = {headers: {Authorization: process.env.ONEBOX_AUTH}}
+  const data = {account_id:account_id}
+  try {
+    const mainFolder = await axios.post(process.env.ONEBOX_GETMAINFOLDER, data, header)
+  }
+  catch(error){
+    console.log(error);
+  } 
+  return mainFolder
+}
+
 async function getstorage(account_id){
   const header = {headers: {Authorization: process.env.ONEBOX_AUTH}}
   const account_ID = { account_id: account_id}
@@ -179,4 +191,4 @@ async function getLimitMeeting(email){
   }
   // user.license = Date.now()
 }
-module.exports = {getonebox,savefileonebox,createfolder,getstorage,getLimitMeeting}
+module.exports = {getonebox,savefileonebox,createfolder,getstorage,getLimitMeeting , getMainfolder}
