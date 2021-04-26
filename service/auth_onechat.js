@@ -4,7 +4,6 @@ const secretkeyOnebinar = process.env.secretkeyOnebinar;
 const secretkeyOnedentral = process.env.secretkeyOnedentral;
 
 module.exports = function (token, service) {
-  console.log(token, service);
   if (
     (secretkeyOnechat === token && service == 'onechat') ||
     (secretkeyOnechat === token && service == null)
