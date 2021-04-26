@@ -713,8 +713,8 @@ router.post("/endjoin", async function (req, res, next) {
       "Access-Control-Allow-Headers",
       "Content-Type, Option, Authorization"
     );
-    const { meetingid, tag } = req.body;
-    let namejoin = req.body.name;
+    const { meetingid, tag, name} = req.body;
+    const namejoin = name;
     let roomdata;
     const tokenkey =
       req.headers["authorization"] !== undefined
