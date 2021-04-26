@@ -543,10 +543,7 @@ router.post("/checkKey", async function (req, res) {
     let meetingid = req.body.meetingid;
     let roomdata;
     let nameJoin = req.body.name;
-    if (
-      req.body.tag == "oneconference" ||
-      req.body.tag == "onemail"
-    ) {
+    if (req.body.tag == "oneconference" || req.body.tag == "onemail") {
       roomdata = await roomonecon.findOne({ meeting_id: meetingid });
       res.send({ key: roomdata.key, urlInvite: roomdata.urlInvite });
     } else if (req.body.tag == "onechat") {
@@ -607,7 +604,10 @@ router.post("/endmeeting", async function (req, res, next) {
     const { meetingid, tag } = req.body;
     let roomdata;
     let arrJoin;
-    const tokenkey = req.headers["authorization"] !== undefined ? req.headers["authorization"].split(" ")[1] : null
+    const tokenkey =
+      req.headers["authorization"] !== undefined
+        ? req.headers["authorization"].split(" ")[1]
+        : null;
     if (auth(tokenkey, tag)) {
       if (tag == "onechat") {
         roomdata = await roomonechat.findOne({ meeting_id: meetingid });
@@ -686,7 +686,7 @@ router.post("/endmeeting", async function (req, res, next) {
           });
         }
       }
-    }else{
+    } else {
       res.status(401).send({
         status: "AuthError",
         error: "SecretKey-Wrong",
@@ -713,53 +713,93 @@ router.post("/endjoin", async function (req, res, next) {
       "Access-Control-Allow-Headers",
       "Content-Type, Option, Authorization"
     );
-
-    let meetingid = req.body.meetingid;
+    const { meetingid, tag } = req.body;
     let namejoin = req.body.name;
     let roomdata;
-    if (
-      req.body.tag == "oneconference" ||
-      req.body.tag == "onemail"
-    ) {
-      roomdata = await roomonecon.findOne({ meeting_id: meetingid });
-      let enddata = updateEndJoin(roomdata.member, namejoin);
-      await roomonecon.updateOne(
-        { meeting_id: meetingid },
-        { member: enddata }
-      );
-    } else if (req.body.tag == "onechat") {
-      roomdata = await roomonechat.findOne({ meeting_id: meetingid });
-      let enddata = updateEndJoin(roomdata.member, namejoin);
-      await roomonechat.updateOne(
-        { meeting_id: meetingid },
-        { member: enddata }
-      );
-    } else if (req.body.tag == "manageAi") {
-      roomdata = await roomManageai.findOne({ meeting_id: meetingid });
-      let enddata = updateEndJoin(roomdata.member, namejoin);
-      await roomManageai.updateOne(
-        { meeting_id: meetingid },
-        { member: enddata }
-      );
-    } else if (req.body.tag == "onedentral") {
-      roomdata = await roomOnedentral.findOne({ meeting_id: meetingid });
-      let enddata = updateEndJoin(roomdata.member, namejoin);
-      await roomManageai.updateOne(
-        { meeting_id: meetingid },
-        { member: enddata }
-      );
-    } else if (req.body.tag == "onebinar") {
-      roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
-      let enddata = updateEndJoin(roomdata.member, namejoin);
-      await roomManageai.updateOne(
-        { meeting_id: meetingid },
-        { member: enddata }
-      );
+    const tokenkey =
+      req.headers["authorization"] !== undefined
+        ? req.headers["authorization"].split(" ")[1]
+        : null;
+    if (auth(tokenkey, tag)) {
+      if (tag == "onechat") {
+        roomdata = await roomonechat.findOne({ meeting_id: meetingid });
+        if (roomdata) {
+          let enddata = updateEndJoin(roomdata.member, namejoin);
+          await roomonechat.updateOne(
+            { meeting_id: meetingid },
+            { member: enddata }
+          );
+          res.status(200).send({
+            status: "success",
+            message: "hangup successfully.",
+          });
+        } else {
+          res.status(400).send({
+            status: "error",
+            message: "meetingid is wrong.",
+          });
+        }
+      } else if (tag == "manageAi") {
+        roomdata = await roomManageai.findOne({ meeting_id: meetingid });
+        if (roomdata) {
+          let enddata = updateEndJoin(roomdata.member, namejoin);
+          await roomManageai.updateOne(
+            { meeting_id: meetingid },
+            { member: enddata }
+          );
+          res.status(200).send({
+            status: "success",
+            message: "hangup successfully.",
+          });
+        } else {
+          res.status(400).send({
+            status: "error",
+            message: "meetingid is wrong.",
+          });
+        }
+      } else if (tag == "onedentral") {
+        roomdata = await roomOnedentral.findOne({ meeting_id: meetingid });
+        if (roomdata) {
+          let enddata = updateEndJoin(roomdata.member, namejoin);
+          await roomManageai.updateOne(
+            { meeting_id: meetingid },
+            { member: enddata }
+          );
+          res.status(200).send({
+            status: "success",
+            message: "hangup successfully.",
+          });
+        } else {
+          res.status(400).send({
+            status: "error",
+            message: "meetingid is wrong.",
+          });
+        }
+      } else if (tag == "onebinar") {
+        roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
+        if (roomdata) {
+          let enddata = updateEndJoin(roomdata.member, namejoin);
+          await roomManageai.updateOne(
+            { meeting_id: meetingid },
+            { member: enddata }
+          );
+          res.status(200).send({
+            status: "success",
+            message: "hangup successfully.",
+          });
+        } else {
+          res.status(400).send({
+            status: "error",
+            message: "meetingid is wrong.",
+          });
+        }
+      }
+    } else {
+      res.status(401).send({
+        status: "AuthError",
+        error: "SecretKey-Wrong",
+      });
     }
-    res.status(200).send({
-      events: "EndJoin",
-      status: "Success",
-    });
   } catch (error) {
     console.log(error);
     res.status(400).send({
