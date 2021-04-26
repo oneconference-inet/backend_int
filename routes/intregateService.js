@@ -607,85 +607,90 @@ router.post("/endmeeting", async function (req, res, next) {
     const { meetingid, clientname } = req.body;
     let roomdata;
     let arrJoin;
-    const tokenkey = req.headers["authorization"].split(" ")[1];
+    const tokenkey = req.headers["authorization"] !== undefined ? req.headers["authorization"].split(" ")[1] : null
     if (auth(tokenkey, clientname)) {
-    }
-    if (clientname == "onechat") {
-      roomdata = await roomonechat.findOne({ meeting_id: meetingid });
-      if (roomdata) {
-        arrJoin = roomdata.member;
-        arrJoin.forEach((e) => {
-          e.out_at = timeNow();
-        });
-        await roomonechat.updateOne({ meeting_id: meetingid }, roomdata);
-        roomdata.delete();
-        res.status(200).send({
-          status: "success",
-          message: "endmeeting successfully.",
-        });
-      } else {
-        res.status(400).send({
-          status: "error",
-          message: "meetingid is wrong.",
-        });
+      if (clientname == "onechat") {
+        roomdata = await roomonechat.findOne({ meeting_id: meetingid });
+        if (roomdata) {
+          arrJoin = roomdata.member;
+          arrJoin.forEach((e) => {
+            e.out_at = timeNow();
+          });
+          await roomonechat.updateOne({ meeting_id: meetingid }, roomdata);
+          // roomdata.delete();
+          res.status(200).send({
+            status: "success",
+            message: "endmeeting successfully.",
+          });
+        } else {
+          res.status(400).send({
+            status: "error",
+            message: "meetingid is wrong.",
+          });
+        }
+      } else if (clientname == "manageAi") {
+        roomdata = await roomManageai.findOne({ meeting_id: meetingid });
+        if (roomdata) {
+          arrJoin = roomdata.member;
+          arrJoin.forEach((e) => {
+            e.out_at = timeNow();
+          });
+          await roomManageai.updateOne({ meeting_id: meetingid }, roomdata);
+          // roomdata.delete();
+          res.status(200).send({
+            status: "success",
+            message: "endmeeting successfully.",
+          });
+        } else {
+          res.status(400).send({
+            status: "error",
+            message: "meetingid is wrong.",
+          });
+        }
+      } else if (clientname == "onedentral") {
+        roomdata = await roomOnedentral.findOne({ meeting_id: meetingid });
+        if (roomdata) {
+          arrJoin = roomdata.member;
+          arrJoin.forEach((e) => {
+            e.out_at = timeNow();
+          });
+          await roomOnedentral.updateOne({ meeting_id: meetingid }, roomdata);
+          // roomdata.delete();
+          res.status(200).send({
+            status: "success",
+            message: "endmeeting successfully.",
+          });
+        } else {
+          res.status(400).send({
+            status: "error",
+            message: "meetingid is wrong.",
+          });
+        }
+      } else if (clientname == "onebinar") {
+        roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
+        if (roomdata) {
+          arrJoin = roomdata.member;
+          arrJoin.forEach((e) => {
+            e.out_at = timeNow();
+          });
+          await roomOnebinar.updateOne({ meeting_id: meetingid }, roomdata);
+          // roomdata.delete();
+          res.status(200).send({
+            status: "success",
+            message: "endmeeting successfully.",
+          });
+        } else {
+          res.status(400).send({
+            status: "error",
+            message: "meetingid is wrong.",
+          });
+        }
       }
-    } else if (clientname == "manageAi") {
-      roomdata = await roomManageai.findOne({ meeting_id: meetingid });
-      if (roomdata) {
-        arrJoin = roomdata.member;
-        arrJoin.forEach((e) => {
-          e.out_at = timeNow();
-        });
-        await roomManageai.updateOne({ meeting_id: meetingid }, roomdata);
-        roomdata.delete();
-        res.status(200).send({
-          status: "success",
-          message: "endmeeting successfully.",
-        });
-      } else {
-        res.status(400).send({
-          status: "error",
-          message: "meetingid is wrong.",
-        });
-      }
-    } else if (clientname == "onedentral") {
-      roomdata = await roomOnedentral.findOne({ meeting_id: meetingid });
-      if (roomdata) {
-        arrJoin = roomdata.member;
-        arrJoin.forEach((e) => {
-          e.out_at = timeNow();
-        });
-        await roomOnedentral.updateOne({ meeting_id: meetingid }, roomdata);
-        roomdata.delete();
-        res.status(200).send({
-          status: "success",
-          message: "endmeeting successfully.",
-        });
-      } else {
-        res.status(400).send({
-          status: "error",
-          message: "meetingid is wrong.",
-        });
-      }
-    } else if (clientname == "onebinar") {
-      roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
-      if (roomdata) {
-        arrJoin = roomdata.member;
-        arrJoin.forEach((e) => {
-          e.out_at = timeNow();
-        });
-        await roomOnebinar.updateOne({ meeting_id: meetingid }, roomdata);
-        roomdata.delete();
-        res.status(200).send({
-          status: "success",
-          message: "endmeeting successfully.",
-        });
-      } else {
-        res.status(400).send({
-          status: "error",
-          message: "meetingid is wrong.",
-        });
-      }
+    }else{
+      res.status(401).send({
+        status: "AuthError",
+        error: "SecretKey-Wrong",
+      });
     }
   } catch (error) {
     console.log(error);
