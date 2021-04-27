@@ -542,13 +542,13 @@ router.post("/checkKey", async function (req, res) {
       "Content-Type, Option, Authorization"
     );
 
-    let meetingid = req.body.meetingid;
+    const {meetingid , clientname, name} = req.body;
     let roomdata;
-    let nameJoin = req.body.name;
-    if (req.body.tag == "oneconference" || req.body.tag == "onemail") {
+    let nameJoin = name;
+    if (clientname == "oneconference" || clientname == "onemail") {
       roomdata = await roomonecon.findOne({ meeting_id: meetingid });
       res.send({ key: roomdata.key, urlInvite: roomdata.urlInvite });
-    } else if (req.body.tag == "onechat") {
+    } else if (clientname == "onechat") {
       roomdata = await roomonechat.findOne({ meeting_id: meetingid });
       let joindata = updateJoinTime(roomdata.member, nameJoin);
       await roomonechat.updateOne(
@@ -556,7 +556,7 @@ router.post("/checkKey", async function (req, res) {
         { member: joindata.arrMember }
       );
       res.send({ key: roomdata.keyroom });
-    } else if (req.body.tag == "manageAi") {
+    } else if (clientname == "manageAi") {
       roomdata = await roomManageai.findOne({ meeting_id: meetingid });
       let joindata = updateJoinTime(roomdata.member, nameJoin);
       await roomManageai.updateOne(
@@ -564,7 +564,7 @@ router.post("/checkKey", async function (req, res) {
         { member: joindata.arrMember }
       );
       res.send({ key: roomdata.keyroom });
-    } else if (req.body.tag == "onedental") {
+    } else if (clientname == "onedental") {
       roomdata = await roomOnedental.findOne({ meeting_id: meetingid });
       let joindata = updateJoinTime(roomdata.member, nameJoin);
       await roomOnedental.updateOne(
@@ -572,7 +572,7 @@ router.post("/checkKey", async function (req, res) {
         { member: joindata.arrMember }
       );
       res.send({ key: roomdata.keyroom });
-    } else if (req.body.tag == "onebinar") {
+    } else if (clientname == "onebinar") {
       roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
       let joindata = updateJoinTime(roomdata.member, nameJoin);
       await roomOnebinar.updateOne(
