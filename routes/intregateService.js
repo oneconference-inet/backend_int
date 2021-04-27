@@ -19,7 +19,7 @@ router.post("/create", async function (req, res, next) {
       let meetingid = sha1(data.roomname) + "-" + Date.now();
       let tagService = data.tag;
       let key = sha1(meetingid + data.name);
-      let url = process.env.ONECHAT_ROOM_DOMAIN + meetingid + "?";
+      let url = process.env.ONECHAT_ROOM_DOMAIN;
       if (!ValidUrl(data.url) && data.url != "" && data.url != null) {
         return res
           .status(400)
@@ -39,6 +39,7 @@ router.post("/create", async function (req, res, next) {
       };
       if (tagService == null || tagService == "onechat") {
         tagService = "onechat";
+        meetingid = meetingid + "-N0jv9PZp8k";
         let session = new roomonechat({
           hostname: data.name,
           roomname: data.roomname,
@@ -63,7 +64,7 @@ router.post("/create", async function (req, res, next) {
           redirect: url_redirect,
         };
         const token = code.encodeJS(urlroomToken);
-        url = url + token;
+        url = url + meetingid + "?"+ token;
         await session.save();
         logger.info(
           `service: ${tagService}, name: ${data.name}, meetingid: ${meetingid} message: create url meeting.`
@@ -106,7 +107,7 @@ router.post("/create", async function (req, res, next) {
           redirect: url_redirect,
         };
         const token = code.encodeJS(urlroomToken);
-        url = url + token;
+        url = url + meetingid + "?"+ token;
         await session.save();
         logger.info(
           `service: ${tagService}, name: ${data.name}, meetingid: ${meetingid} message: create url meeting.`
@@ -149,7 +150,7 @@ router.post("/create", async function (req, res, next) {
           redirect: url_redirect,
         };
         const token = code.encodeJS(urlroomToken);
-        url = url + token;
+        url = url + meetingid + "?"+ token;
         await session.save();
         logger.info(
           `service: ${tagService}, name: ${data.name}, meetingid: ${meetingid} message: create url meeting.`
@@ -167,6 +168,7 @@ router.post("/create", async function (req, res, next) {
         });
       } else if (tagService == "onebinar") {
         tagService = "onebinar";
+        meetingid = meetingid + "-S0bwJAfVvc";
         let session = new roomOnebinar({
           hostname: data.name,
           roomname: data.roomname,
@@ -191,7 +193,7 @@ router.post("/create", async function (req, res, next) {
           redirect: url_redirect,
         };
         const token = code.encodeJS(urlroomToken);
-        url = url + token;
+        url = url + meetingid + "?"+ token;
         await session.save();
         logger.info(
           `service: ${tagService}, name: ${data.name}, meetingid: ${meetingid} message: create url meeting.`
