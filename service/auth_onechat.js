@@ -1,7 +1,7 @@
 const secretkeyManageAi = process.env.secretkeyManageAi;
 const secretkeyOnechat = process.env.secretkeyOnechat;
 const secretkeyOnebinar = process.env.secretkeyOnebinar;
-const secretkeyOnedentral = process.env.secretkeyOnedentral;
+const secretkeyOnedental = process.env.secretkeyOnedental;
 
 module.exports = function (token, service) {
   if (
@@ -13,7 +13,7 @@ module.exports = function (token, service) {
     return true;
   } else if (secretkeyOnebinar === token && service == 'onebinar') {
     return true;
-  } else if (secretkeyOnedentral === token && service == 'onedentral') {
+  } else if (secretkeyOnedental === token && service == 'onedental') {
     return true;
   } else {
     return false;

@@ -4,7 +4,7 @@ const sha1 = require("sha1");
 var roomonechat = require("../models/session_roomonechat");
 var roomManageai = require("../models/session_roomManageAi");
 var roomOnebinar = require("../models/session_roomOnebinar");
-var roomOnedentral = require("../models/session_roomOnedentral");
+var roomOnedental = require("../models/session_roomOnedental");
 // var roomonecon = require('../models/session_room')
 const auth = require("../service/auth_onechat");
 const code = require("../service/hashcode");
@@ -122,10 +122,10 @@ router.post("/create", async function (req, res, next) {
           events: "CreateRoom",
           status: "Success",
         });
-      } else if (tagService == "onedentral") {
-        tagService = "onedentral";
+      } else if (tagService == "onedental") {
+        tagService = "onedental";
         meetingid = meetingid + "-oX7jai3s1t";
-        let session = new roomOnedentral({
+        let session = new roomOnedental({
           hostname: data.name,
           roomname: data.roomname,
           urlroom: url,
@@ -443,13 +443,13 @@ router.post("/join", async function (req, res, next) {
             .status(400)
             .json({ status: "error", message: "meetingid is wrong." });
         }
-      } else if (tagService == "onedentral") {
+      } else if (tagService == "onedental") {
         if (!ValidUrl(data.url) && data.url != "" && data.url != null) {
           return res
             .status(400)
             .json({ status: "error", message: "url invalid." });
         }
-        roomdata = await roomOnedentral.findOne({ meeting_id: data.meetingid });
+        roomdata = await roomOnedental.findOne({ meeting_id: data.meetingid });
         if (roomdata) {
           if (roomdata.keyroom !== data.key) {
             logger.error(
@@ -465,14 +465,14 @@ router.post("/join", async function (req, res, next) {
               nickname: data.name,
               option: optionResult(),
               clientid: `${data.name}`,
-              service: "onedentral",
+              service: "onedental",
               redirect: url_redirect,
             };
             const token = code.encodeJS(urlroomToken);
             url = url + token;
             let joindata = updateJoinTime(roomdata.member, data.name);
             if (joindata.statusJoin) {
-              await roomOnedentral.updateOne(
+              await roomOnedental.updateOne(
                 { meeting_id: data.meetingid },
                 { member: joindata.arrMember }
               );
@@ -482,7 +482,7 @@ router.post("/join", async function (req, res, next) {
             } else {
               arrJoin = joindata.arrMember;
               arrJoin.push({ name: data.name, join_at: timeNow(), out_at: "" });
-              await roomOnedentral.updateOne(
+              await roomOnedental.updateOne(
                 { meeting_id: data.meetingid },
                 { member: arrJoin }
               );
@@ -562,10 +562,10 @@ router.post("/checkKey", async function (req, res) {
         { member: joindata.arrMember }
       );
       res.send({ key: roomdata.keyroom });
-    } else if (req.body.tag == "onedentral") {
-      roomdata = await roomOnedentral.findOne({ meeting_id: meetingid });
+    } else if (req.body.tag == "onedental") {
+      roomdata = await roomOnedental.findOne({ meeting_id: meetingid });
       let joindata = updateJoinTime(roomdata.member, nameJoin);
-      await roomOnedentral.updateOne(
+      await roomOnedental.updateOne(
         { meeting_id: meetingid },
         { member: joindata.arrMember }
       );
@@ -647,14 +647,14 @@ router.post("/endmeeting", async function (req, res, next) {
             message: "meetingid is wrong.",
           });
         }
-      } else if (tag == "onedentral") {
-        roomdata = await roomOnedentral.findOne({ meeting_id: meetingid });
+      } else if (tag == "onedental") {
+        roomdata = await roomOnedental.findOne({ meeting_id: meetingid });
         if (roomdata) {
           arrJoin = roomdata.member;
           arrJoin.forEach((e) => {
             e.out_at = timeNow();
           });
-          await roomOnedentral.updateOne({ meeting_id: meetingid }, roomdata);
+          await roomOnedental.updateOne({ meeting_id: meetingid }, roomdata);
           // roomdata.delete();
           res.status(200).send({
             status: "success",
@@ -757,11 +757,11 @@ router.post("/endjoin", async function (req, res, next) {
             message: "meetingid is wrong.",
           });
         }
-      } else if (tag == "onedentral") {
-        roomdata = await roomOnedentral.findOne({ meeting_id: meetingid });
+      } else if (tag == "onedental") {
+        roomdata = await roomOnedental.findOne({ meeting_id: meetingid });
         if (roomdata) {
           let enddata = updateEndJoin(roomdata.member, namejoin);
-          await roomManageai.updateOne(
+          await roomOnedental.updateOne(
             { meeting_id: meetingid },
             { member: enddata }
           );
@@ -779,7 +779,7 @@ router.post("/endjoin", async function (req, res, next) {
         roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
         if (roomdata) {
           let enddata = updateEndJoin(roomdata.member, namejoin);
-          await roomManageai.updateOne(
+          await roomOnebinar.updateOne(
             { meeting_id: meetingid },
             { member: enddata }
           );
