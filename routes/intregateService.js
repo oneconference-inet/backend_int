@@ -623,6 +623,9 @@ router.post("/endmeeting", async function (req, res, next) {
           });
           await roomonechat.updateOne({ meeting_id: meetingid }, roomdata);
           // roomdata.delete();
+          logger.info(
+            `service: ${tag}, meetingid: ${meetingid} message: endmeeting successfully.`
+          );
           res.status(200).send({
             status: "success",
             message: "endmeeting successfully.",
@@ -647,6 +650,9 @@ router.post("/endmeeting", async function (req, res, next) {
           });
           await roomManageai.updateOne({ meeting_id: meetingid }, roomdata);
           // roomdata.delete();
+          logger.info(
+            `service: ${tag}, meetingid: ${meetingid} message: endmeeting successfully.`
+          );
           res.status(200).send({
             status: "success",
             message: "endmeeting successfully.",
@@ -671,6 +677,9 @@ router.post("/endmeeting", async function (req, res, next) {
           });
           await roomOnedental.updateOne({ meeting_id: meetingid }, roomdata);
           // roomdata.delete();
+          logger.info(
+            `service: ${tag}, meetingid: ${meetingid} message: endmeeting successfully.`
+          );
           res.status(200).send({
             status: "success",
             message: "endmeeting successfully.",
@@ -695,6 +704,9 @@ router.post("/endmeeting", async function (req, res, next) {
           });
           await roomOnebinar.updateOne({ meeting_id: meetingid }, roomdata);
           // roomdata.delete();
+          logger.info(
+            `service: ${tag}, meetingid: ${meetingid} message: endmeeting successfully.`
+          );
           res.status(200).send({
             status: "success",
             message: "endmeeting successfully.",
@@ -749,6 +761,9 @@ router.post("/endjoin", async function (req, res, next) {
             { meeting_id: meetingid },
             { member: enddata }
           );
+          logger.info(
+            `service: ${tag}, name: ${namejoin}, meetingid: ${meetingid} message: hangup successfully.`
+          );
           res.status(200).send({
             status: "success",
             message: "hangup successfully.",
@@ -766,6 +781,9 @@ router.post("/endjoin", async function (req, res, next) {
           await roomManageai.updateOne(
             { meeting_id: meetingid },
             { member: enddata }
+          );
+          logger.info(
+            `service: ${tag}, name: ${namejoin}, meetingid: ${meetingid} message: hangup successfully.`
           );
           res.status(200).send({
             status: "success",
@@ -785,6 +803,9 @@ router.post("/endjoin", async function (req, res, next) {
             { meeting_id: meetingid },
             { member: enddata }
           );
+          logger.info(
+            `service: ${tag}, name: ${namejoin}, meetingid: ${meetingid} message: hangup successfully.`
+          );
           res.status(200).send({
             status: "success",
             message: "hangup successfully.",
@@ -802,6 +823,9 @@ router.post("/endjoin", async function (req, res, next) {
           await roomOnebinar.updateOne(
             { meeting_id: meetingid },
             { member: enddata }
+          );
+          logger.info(
+            `service: ${tag}, name: ${namejoin}, meetingid: ${meetingid} message: hangup successfully.`
           );
           res.status(200).send({
             status: "success",
