@@ -768,7 +768,7 @@ router.post("/endjoin", async function (req, res, next) {
         : null;
     if (auth(tokenkey, tag)) {
       if (tag == "onechat") {
-        roomdata = await roomonechat.findOne({ meeting_id: meetingid });
+        roomdata = await roomonechat.findOne({ meeting_id: meetingid },'member');
         if (roomdata) {
           let enddata = updateEndJoin(roomdata.member, namejoin);
           await roomonechat.updateOne(
@@ -789,7 +789,7 @@ router.post("/endjoin", async function (req, res, next) {
           });
         }
       } else if (tag == "manageAi") {
-        roomdata = await roomManageai.findOne({ meeting_id: meetingid });
+        roomdata = await roomManageai.findOne({ meeting_id: meetingid },'member');
         if (roomdata) {
           let enddata = updateEndJoin(roomdata.member, namejoin);
           await roomManageai.updateOne(
@@ -810,7 +810,7 @@ router.post("/endjoin", async function (req, res, next) {
           });
         }
       } else if (tag == "onedental") {
-        roomdata = await roomOnedental.findOne({ meeting_id: meetingid });
+        roomdata = await roomOnedental.findOne({ meeting_id: meetingid },'member');
         if (roomdata) {
           let enddata = updateEndJoin(roomdata.member, namejoin);
           await roomOnedental.updateOne(
@@ -831,7 +831,7 @@ router.post("/endjoin", async function (req, res, next) {
           });
         }
       } else if (tag == "onebinar") {
-        roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
+        roomdata = await roomOnebinar.findOne({ meeting_id: meetingid },'member');
         if (roomdata) {
           let enddata = updateEndJoin(roomdata.member, namejoin);
           await roomOnebinar.updateOne(
