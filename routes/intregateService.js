@@ -5,6 +5,8 @@ var roomonechat = require("../models/session_roomonechat");
 var roomManageai = require("../models/session_roomManageAi");
 var roomOnebinar = require("../models/session_roomOnebinar");
 var roomOnedental = require("../models/session_roomOnedental");
+var oneboxService = require("../service/onebox")
+
 // var roomonecon = require('../models/session_room')
 const auth = require("../service/auth_onechat");
 const code = require("../service/hashcode");
@@ -83,6 +85,15 @@ router.post("/create", async function (req, res, next) {
       } else if (tagService == "manageAi") {
         tagService = "manageAi";
         meetingid = meetingid + "-3OPBsOwHX6";
+        const mainfolder = await oneboxService.getMainfolder(data.account_id)
+        let res_mainfolder = mainfolder.data.result[0].folder_id
+        if (mainfolder){
+          console.log("mainfolder ==>" , mainfolder.data.result);
+          if (mainfolder.data.result.length >1){
+              res_mainfolder = mainfolder.data.result[1].folder_id
+          }
+        }
+        console.log(res_mainfolder);
         let session = new roomManageai({
           hostname: data.name,
           roomname: data.roomname,
@@ -90,6 +101,7 @@ router.post("/create", async function (req, res, next) {
           keyroom: key,
           member: [{ name: data.name, join_at: timeNow(), out_at: "" }],
           meeting_id: meetingid,
+          oneboxaccountid:res_mainfolder,
           created_at: Date.now(),
         });
         const urlroomToken = {

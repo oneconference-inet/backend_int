@@ -151,12 +151,15 @@ async function getMainfolder(account_id){
   const header = {headers: {Authorization: process.env.ONEBOX_AUTH}}
   const data = {account_id:account_id}
   try {
-    const mainFolder = await axios.post(process.env.ONEBOX_GETMAINFOLDER, data, header)
+    const mainFolder = await axios.post(process.env.ONEBOX_GETMAINFOLDER_PROD, data, header)
+    return mainFolder
   }
   catch(error){
+    console.log("error in getMainfolder");
     console.log(error);
+
   } 
-  return mainFolder
+  
 }
 
 async function getstorage(account_id){
