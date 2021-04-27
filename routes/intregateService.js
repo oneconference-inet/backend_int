@@ -610,11 +610,16 @@ router.post("/endmeeting", async function (req, res, next) {
         : null;
     if (auth(tokenkey, tag)) {
       if (tag == "onechat") {
-        roomdata = await roomonechat.findOne({ meeting_id: meetingid });
+        roomdata = await roomonechat.findOne(
+          { meeting_id: meetingid },
+          "member"
+        );
         if (roomdata) {
           arrJoin = roomdata.member;
           arrJoin.forEach((e) => {
-            e.out_at = timeNow();
+            if (e.out_at === "") {
+              e.out_at = timeNow();
+            }
           });
           await roomonechat.updateOne({ meeting_id: meetingid }, roomdata);
           // roomdata.delete();
@@ -629,11 +634,16 @@ router.post("/endmeeting", async function (req, res, next) {
           });
         }
       } else if (tag == "manageAi") {
-        roomdata = await roomManageai.findOne({ meeting_id: meetingid });
+        roomdata = await roomManageai.findOne(
+          { meeting_id: meetingid },
+          "member"
+        );
         if (roomdata) {
           arrJoin = roomdata.member;
           arrJoin.forEach((e) => {
-            e.out_at = timeNow();
+            if (e.out_at === "") {
+              e.out_at = timeNow();
+            }
           });
           await roomManageai.updateOne({ meeting_id: meetingid }, roomdata);
           // roomdata.delete();
@@ -648,11 +658,16 @@ router.post("/endmeeting", async function (req, res, next) {
           });
         }
       } else if (tag == "onedental") {
-        roomdata = await roomOnedental.findOne({ meeting_id: meetingid });
+        roomdata = await roomOnedental.findOne(
+          { meeting_id: meetingid },
+          "member"
+        );
         if (roomdata) {
           arrJoin = roomdata.member;
           arrJoin.forEach((e) => {
-            e.out_at = timeNow();
+            if (e.out_at === "") {
+              e.out_at = timeNow();
+            }
           });
           await roomOnedental.updateOne({ meeting_id: meetingid }, roomdata);
           // roomdata.delete();
@@ -667,11 +682,16 @@ router.post("/endmeeting", async function (req, res, next) {
           });
         }
       } else if (tag == "onebinar") {
-        roomdata = await roomOnebinar.findOne({ meeting_id: meetingid });
+        roomdata = await roomOnebinar.findOne(
+          { meeting_id: meetingid },
+          "member"
+        );
         if (roomdata) {
           arrJoin = roomdata.member;
           arrJoin.forEach((e) => {
-            e.out_at = timeNow();
+            if (e.out_at === "") {
+              e.out_at = timeNow();
+            }
           });
           await roomOnebinar.updateOne({ meeting_id: meetingid }, roomdata);
           // roomdata.delete();
@@ -713,7 +733,7 @@ router.post("/endjoin", async function (req, res, next) {
       "Access-Control-Allow-Headers",
       "Content-Type, Option, Authorization"
     );
-    const { meetingid, tag, name} = req.body;
+    const { meetingid, tag, name } = req.body;
     const namejoin = name;
     let roomdata;
     const tokenkey =
@@ -834,7 +854,6 @@ function updateEndJoin(arrMember, namejoin) {
 function timeNow() {
   let now = new Date();
   let resultTime = now.toLocaleString();
-
   return resultTime;
 }
 
