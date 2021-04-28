@@ -84,16 +84,7 @@ router.post("/create", async function (req, res, next) {
         });
       } else if (tagService == "manageAi") {
         tagService = "manageAi";
-        meetingid = meetingid + "-3OPBsOwHX6";
-        // const mainfolder = await oneboxService.getMainfolder(data.account_id)
-        // let res_mainfolder = mainfolder.data.result[0].folder_id
-        // if (mainfolder){
-        //   console.log("mainfolder ==>" , mainfolder.data.result);
-        //   if (mainfolder.data.result.length >1){
-        //       res_mainfolder = mainfolder.data.result[1].folder_id
-        //   }
-        // }
-        // console.log(res_mainfolder);
+        meetingid = meetingid + "-3opbsowhx6";
         let session = new roomManageai({
           hostname: data.name,
           roomname: data.roomname,
