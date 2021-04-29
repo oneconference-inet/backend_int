@@ -128,7 +128,7 @@ router.post("/create", async function (req, res, next) {
         });
       } else if (tagService == "onedental") {
         tagService = "onedental";
-        meetingid = meetingid + "-oX7jai3s1t";
+        meetingid = meetingid + "-ox7jai3s1t";
         let session = new roomOnedental({
           hostname: data.name,
           roomname: data.roomname,
