@@ -8,7 +8,7 @@ var Schema = new mongoose.Schema({
     meeting_id : { type:String, default: '' },
     member : { type:Array },
     oneboxaccountid: { type: String, default: '' },
-    file_id : { type:String, default: '' },
+    file_id : { type:Array },
     created_at : { type:Date, default: Date.now() },
     updated_at : { type:Date, default: Date.now() },
 }, { collection: 'session_roomManageAi' })
