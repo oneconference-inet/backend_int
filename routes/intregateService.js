@@ -136,6 +136,7 @@ router.post("/create", async function (req, res, next) {
           keyroom: key,
           member: [{ name: data.name, join_at: timeNow(), out_at: "" }],
           meeting_id: meetingid,
+          oneboxaccountid :  data.account_id,
           created_at: Date.now(),
         });
         const urlroomToken = {
