@@ -5,6 +5,7 @@ var roomonechat = require("../models/session_roomonechat");
 var roomManageai = require("../models/session_roomManageAi");
 var roomOnebinar = require("../models/session_roomOnebinar");
 var roomOnedental = require("../models/session_roomOnedental");
+var roomJmc = require("../models/session_roomJmc");
 var oneboxService = require("../service/onebox")
 
 // var roomonecon = require('../models/session_room')
@@ -170,7 +171,98 @@ router.post("/create", async function (req, res, next) {
           events: "CreateRoom",
           status: "Success",
         });
-      } else if (tagService == "onebinar") {
+        else if (tagService == "onedental") {
+        tagService = "onedental";
+        meetingid = meetingid + "-ox7jai3s1t";
+        let session = new roomOnedental({
+          hostname: data.name,
+          roomname: data.roomname,
+          urlroom: url,
+          keyroom: key,
+          member: [{ name: data.name, join_at: timeNow(), out_at: "" }],
+          meeting_id: meetingid,
+          oneboxaccountid :  data.account_id,
+          created_at: Date.now(),
+        });
+        const urlroomToken = {
+          role: "moderator",
+          meetingId: meetingid,
+          roomname: data.roomname,
+          keyroom: key,
+          nickname: data.name,
+          option: optionResult(),
+          clientid: data.name + "-" + "host",
+          service: tagService,
+          userXmpAuth: process.env.user_jitsi,
+          passXmpAuth: process.env.password_jitsi,
+          secretRoom: false,
+          redirect: url_redirect,
+        };
+        const token = code.encodeJS(urlroomToken);
+        url = url + meetingid + "?"+ token;
+        await session.save();
+        logger.info(
+          `service: ${tagService}, name: ${data.name}, meetingid: ${meetingid} message: create url meeting.`
+        );
+        res.status(200).send({
+          data: {
+            urlroom: url,
+            meetingid: meetingid,
+            key: key,
+            option: optionResult(),
+            created_at: timeNow(),
+          },
+          events: "CreateRoom",
+          status: "Success",
+        });  
+      } 
+
+      else if (tagService == "jmc") {
+        tagService = "jmc";
+        meetingid = meetingid + "-apdxlkruyg";
+        let session = new roomJmc({
+          hostname: data.name,
+          roomname: data.roomname,
+          urlroom: url,
+          keyroom: key,
+          member: [{ name: data.name, join_at: timeNow(), out_at: "" }],
+          meeting_id: meetingid,
+          oneboxaccountid :  data.account_id,
+          created_at: Date.now(),
+        });
+        const urlroomToken = {
+          role: "moderator",
+          meetingId: meetingid,
+          roomname: data.roomname,
+          keyroom: key,
+          nickname: data.name,
+          option: optionResult(),
+          clientid: data.name + "-" + "host",
+          service: tagService,
+          userXmpAuth: process.env.user_jitsi,
+          passXmpAuth: process.env.password_jitsi,
+          secretRoom: false,
+          redirect: url_redirect,
+        };
+        const token = code.encodeJS(urlroomToken);
+        url = url + meetingid + "?"+ token;
+        await session.save();
+        logger.info(
+          `service: ${tagService}, name: ${data.name}, meetingid: ${meetingid} message: create url meeting.`
+        );
+        res.status(200).send({
+          data: {
+            urlroom: url,
+            meetingid: meetingid,
+            key: key,
+            option: optionResult(),
+            created_at: timeNow(),
+          },
+          events: "CreateRoom",
+          status: "Success",
+        });  
+      } 
+      else if (tagService == "onebinar") {
         tagService = "onebinar";
         meetingid = meetingid + "-S0bwJAfVvc";
         let session = new roomOnebinar({
