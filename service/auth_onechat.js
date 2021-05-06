@@ -2,6 +2,7 @@ const secretkeyManageAi = process.env.secretkeyManageAi;
 const secretkeyOnechat = process.env.secretkeyOnechat;
 const secretkeyOnebinar = process.env.secretkeyOnebinar;
 const secretkeyOnedental = process.env.secretkeyOnedental;
+const secretkeyJMC = process.env.secretkeyJMC;
 
 module.exports = function (token, service) {
   if (
@@ -14,6 +15,8 @@ module.exports = function (token, service) {
   } else if (secretkeyOnebinar === token && service == 'onebinar') {
     return true;
   } else if (secretkeyOnedental === token && service == 'onedental') {
+    return true;
+  } else if (secretkeyJMC === token && service == 'jmc') {
     return true;
   } else {
     return false;
