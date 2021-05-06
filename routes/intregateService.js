@@ -590,7 +590,7 @@ router.post('/join', async function (req, res, next) {
             url = url + token;
             let joindata = updateJoinTime(roomdata.member, data.name);
             if (joindata.statusJoin) {
-              await roomOnedental.updateOne(
+              await roomJmc.updateOne(
                 { meeting_id: data.meetingid },
                 { member: joindata.arrMember }
               );
@@ -600,7 +600,7 @@ router.post('/join', async function (req, res, next) {
             } else {
               arrJoin = joindata.arrMember;
               arrJoin.push({ name: data.name, join_at: timeNow(), out_at: '' });
-              await roomOnedental.updateOne(
+              await roomJmc.updateOne(
                 { meeting_id: data.meetingid },
                 { member: arrJoin }
               );
@@ -691,7 +691,7 @@ router.post('/checkKey', async function (req, res) {
     } else if (clientname == 'jmc') {
       roomdata = await roomJmc.findOne({ meeting_id: meetingid });
       let joindata = updateJoinTime(roomdata.member, nameJoin);
-      await roomOnedental.updateOne(
+      await roomJmc.updateOne(
         { meeting_id: meetingid },
         { member: joindata.arrMember }
       );
@@ -825,7 +825,7 @@ router.post('/endmeeting', async function (req, res, next) {
               e.out_at = timeNow();
             }
           });
-          await roomOnedental.updateOne({ meeting_id: meetingid }, roomdata);
+          await roomJmc.updateOne({ meeting_id: meetingid }, roomdata);
           // roomdata.delete();
           logger.info(
             `service: ${tag}, meetingid: ${meetingid} message: endmeeting successfully.`
@@ -979,7 +979,7 @@ router.post('/endjoin', async function (req, res, next) {
         roomdata = await roomJmc.findOne({ meeting_id: meetingid }, 'member');
         if (roomdata) {
           let enddata = updateEndJoin(roomdata.member, namejoin);
-          await roomOnedental.updateOne(
+          await roomJmc.updateOne(
             { meeting_id: meetingid },
             { member: enddata }
           );
