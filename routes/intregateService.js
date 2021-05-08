@@ -47,11 +47,11 @@ router.post("/create", async function (req, res, next) {
         tagService = "onechat";
         meetingid = meetingid + "-N0jv9PZp8k";
         let session = new roomonechat({
-          hostname: name,
+          hostname: encodeName,
           roomname: data.roomname,
           urlroom: url,
           keyroom: key,
-          member: [{ name: name, join_at: timeNow(), out_at: "" }],
+          member: [{ name: encodeName, join_at: timeNow(), out_at: "" }],
           meeting_id: meetingid,
           created_at: Date.now(),
         });
@@ -274,7 +274,7 @@ router.post("/create", async function (req, res, next) {
       });
     }
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     // next(error);
     res.status(401).send({
       status: "Error",
