@@ -436,7 +436,7 @@ router.post('/join', async function (req, res, next) {
               nickname: decodeName,
               option: optionResult(),
               clientid: `${decodeName}`,
-              service: 'onebinar',
+              service: tagService,
               redirect: url_redirect,
             };
             const token = code.encodeJS(urlroomToken);
@@ -507,7 +507,7 @@ router.post('/join', async function (req, res, next) {
               nickname: decodeName,
               option: optionResult(),
               clientid: `${decodeName}`,
-              service: 'manageAi',
+              service: tagService,
               redirect: url_redirect,
             };
             const token = code.encodeJS(urlroomToken);
@@ -578,7 +578,7 @@ router.post('/join', async function (req, res, next) {
               nickname: decodeName,
               option: optionResult(),
               clientid: `${decodeName}`,
-              service: 'onedental',
+              service: tagService,
               redirect: url_redirect,
             };
             const token = code.encodeJS(urlroomToken);
@@ -649,7 +649,7 @@ router.post('/join', async function (req, res, next) {
               nickname: decodeName,
               option: optionResult(),
               clientid: `${decodeName}`,
-              service: 'jmc',
+              service: tagService,
               redirect: url_redirect,
             };
             const token = code.encodeJS(urlroomToken);
@@ -722,7 +722,7 @@ router.post('/join', async function (req, res, next) {
               nickname: decodeName,
               option: optionResult(),
               clientid: `${decodeName}`,
-              service: 'jmc',
+              service: tagService,
               redirect: url_redirect,
             };
             const token = code.encodeJS(urlroomToken);
