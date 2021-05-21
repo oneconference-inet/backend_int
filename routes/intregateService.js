@@ -134,7 +134,7 @@ router.post("/create", async function (req, res, next) {
       } else if (tagService == "onedental") {
         tagService = "onedental";
         meetingid = meetingid + "-ox7jai3s1t";
-        if (data.folder_id === undefined) {
+        if (data.folder_id === undefined || data.folder_id === '') {
           res.status(400).send({
             status: "error",
             error: "folder_id is require",
