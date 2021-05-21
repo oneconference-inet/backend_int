@@ -141,6 +141,7 @@ router.post("/create", async function (req, res, next) {
           keyroom: key,
           member: [{ name: encodeName, join_at: timeNow(), out_at: "" }],
           meeting_id: meetingid,
+          folder_id:data.folder_id,
           oneboxaccountid: data.account_id,
           created_at: Date.now(),
         });
