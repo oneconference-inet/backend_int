@@ -134,6 +134,12 @@ router.post("/create", async function (req, res, next) {
       } else if (tagService == "onedental") {
         tagService = "onedental";
         meetingid = meetingid + "-ox7jai3s1t";
+        if (data.folder_id === undefined) {
+          res.status(400).send({
+            status: "error",
+            error: "folder_id is require",
+          });
+        }
         let session = new roomOnedental({
           hostname: encodeName,
           roomname: data.roomname,
@@ -141,10 +147,11 @@ router.post("/create", async function (req, res, next) {
           keyroom: key,
           member: [{ name: encodeName, join_at: timeNow(), out_at: "" }],
           meeting_id: meetingid,
-          folder_id:data.folder_id,
+          folder_id: data.folder_id,
           oneboxaccountid: data.account_id,
           created_at: Date.now(),
         });
+
         const urlroomToken = {
           role: "moderator",
           meetingId: meetingid,
