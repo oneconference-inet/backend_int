@@ -8,8 +8,7 @@ var roomOnedental = require("../models/session_roomOnedental");
 var roomJmc = require("../models/session_roomJmc");
 var roomTelemedicine = require("../models/session_roomTelemedicine");
 var oneboxService = require("../service/onebox");
-
-// var roomonecon = require('../models/session_room')
+var roomonecon = require('../models/session_room')
 const auth = require("../service/auth_onechat");
 const code = require("../service/hashcode");
 const URL = require("url").URL;
