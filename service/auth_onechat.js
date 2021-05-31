@@ -4,6 +4,7 @@ const secretkeyOnebinar = process.env.secretkeyOnebinar;
 const secretkeyOnedental = process.env.secretkeyOnedental;
 const secretkeyJMC = process.env.secretkeyJMC;
 const secretkeyTelemedicine = process.env.secretkeyTelemedicine;
+const secretkeyEmeeting = process.env.secretkeyEmeeting;
 
 module.exports = function (token, service) {
   if (
@@ -20,6 +21,8 @@ module.exports = function (token, service) {
   } else if (secretkeyJMC === token && service == 'jmc') {
     return true;
   } else if (secretkeyTelemedicine === token && service == 'telemedicine') {
+    return true;
+  } else if (secretkeyEmeeting === token && service == 'emeeting') {
     return true;
   } else {
     return false;
