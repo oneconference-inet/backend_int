@@ -38,6 +38,7 @@ async function genpresinedurl(filename) {
   const url = s3.getSignedUrl("getObject", {
     Bucket: myBucket,
     Key: filename,
+    Expires: 60*60*24*7
   });
   return url;
 }
