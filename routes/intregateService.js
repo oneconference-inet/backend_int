@@ -61,7 +61,7 @@ async function uploadtoS3(req, res) {
 
 router.post("/create", async function (req, res, next) {
   let data = req.body;
-  console.log(data);
+  // console.log(data);
   try {
     const tokenkey = req.headers["authorization"].split(" ")[1];
     if (auth(tokenkey, data.tag)) {
@@ -1169,15 +1169,13 @@ router.post("/endmeeting", async function (req, res, next) {
           );
           console.log("findDirectory =>", findDirectory);
           if (fs.existsSync(findDirectory)) {
-            console.log("exist => ", findDirectory);
             let zippath = `${findDirectory}.zip`;
             await s3Service.zipdirectory(findDirectory, zippath);
             await s3Service.uploadtos3(`${meetingid}.zip`, zippath);
-            fs.rmdirSync(findDirectory, { recursive: true }, (err) => {
+            fs.rmdir(findDirectory, { recursive: true }, (err) => {
               if (err) {
                 console.log(err);
               } else {
-                console.log("zippath => ", zippath);
                 fs.unlinkSync(zippath, { recursive: true }, (err) => {
                   if (err) console.log(err);
                 });
