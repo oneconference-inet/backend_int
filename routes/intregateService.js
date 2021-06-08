@@ -20,6 +20,7 @@ const AWS = require("aws-sdk");
 var s3Service = require("../service/s3_storage");
 var archiver = require("archiver");
 var fs = require("fs");
+const axios = require('axios')
 
 async function uploadtoS3(req, res) {
   AWS.config.update({
@@ -1162,29 +1163,7 @@ router.post("/endmeeting", async function (req, res, next) {
           });
           await roomEmeeting.updateOne({ meeting_id: meetingid }, roomdata);
           // roomdata.delete();
-
-          // zip file
-          let findDirectory = path.resolve(
-            process.env.path_record_emeeting + meetingid
-          );
-          console.log("findDirectory =>", findDirectory);
-          if (fs.existsSync(findDirectory)) {
-            let zippath = `${findDirectory}.zip`;
-            await s3Service.zipdirectory(findDirectory, zippath);
-            await s3Service.uploadtos3(`${meetingid}.zip`, zippath);
-            fs.rmdir(findDirectory, { recursive: true }, (err) => {
-              if (err) {
-                console.log(err);
-              } else {
-                fs.unlinkSync(zippath, { recursive: true }, (err) => {
-                  if (err) console.log(err);
-                });
-              }
-            });
-          }
-
-          // upload to s3 storage
-
+          let toggle_uploads3 = await axios.get(`${process.env.path_node_sendfile_uploadzip}${meetingid}`);
           logger.info(
             `service: ${tag}, meetingid: ${meetingid} message: endmeeting successfully.`
           );

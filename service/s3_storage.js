@@ -6,10 +6,10 @@ var zipfolder = require("zip-a-folder");
 
 
 AWS.config.update({
-  accessKeyId: "DYH22T4REDJ3LK159J3J",
-  secretAccessKey: "LHKzBQqvP/ZPCLoa7q+ce+qA9EnG8iv78hMmX2jo",
+  accessKeyId: process.env.s3_accessKeyId,
+  secretAccessKey: process.env.s3_secretAccessKey,
   signatureVersion: "v4",
-  endpoint: "https://s3gw.inet.co.th:8082",
+  endpoint: process.env.s3_endpoint,
 });
 const s3 = new AWS.S3();
 const myBucket = "testoneconf";
