@@ -60,6 +60,15 @@ async function uploadtoS3(req, res) {
   });
 }
 
+router.post("/getlink/:meetingid", async function (req, res) {
+  let filename = req.params.meetingid;
+  console.log(filename);
+  let s3link = await s3Service.genpresinedurl(filename);
+  res
+    .status(200)
+    .json({ status: "success", message: "", data: { url: s3link } });
+});
+
 router.post("/create", async function (req, res, next) {
   let data = req.body;
   // console.log(data);
@@ -361,7 +370,7 @@ router.post("/create", async function (req, res, next) {
             key: key,
             option: optionResult(),
             created_at: timeNow(),
-            dowloadlink: `/api/onebox/getlink/${meetingid}.zip`,
+            dowloadlink: `/api/onechatroom/getlink/${meetingid}.zip`,
           },
           events: "CreateRoom",
           status: "Success",

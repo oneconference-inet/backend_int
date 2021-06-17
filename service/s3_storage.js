@@ -12,7 +12,7 @@ AWS.config.update({
   endpoint: process.env.s3_endpoint,
 });
 const s3 = new AWS.S3();
-const myBucket = "testoneconf";
+const myBucket = process.env.s3_bucket;
 
 async function uploadtos3(filename, filepath) {
   var myKey = filename;
