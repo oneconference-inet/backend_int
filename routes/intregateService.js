@@ -60,7 +60,7 @@ async function uploadtoS3(req, res) {
   });
 }
 
-router.post("/getlink/:meetingid", async function (req, res) {
+router.get("/getlink/:meetingid", async function (req, res) {
   let filename = req.params.meetingid;
   console.log(filename);
   let s3link = await s3Service.genpresinedurl(filename);
