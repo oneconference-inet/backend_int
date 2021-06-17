@@ -63,10 +63,15 @@ async function uploadtoS3(req, res) {
 router.get("/getlink/:meetingid", async function (req, res) {
   let filename = req.params.meetingid;
   console.log(filename);
-  let s3link = await s3Service.genpresinedurl(filename);
-  res
-    .status(200)
-    .json({ status: "success", message: "", data: { url: s3link } });
+   try {
+    let s3link = await s3Service.genpresinedurl(filename);
+    res
+      .status(200)
+      .json({ status: "success", url: s3link });
+   } catch (error) {
+     console.log(error);
+   }
+  
 });
 
 router.post("/create", async function (req, res, next) {
@@ -370,7 +375,7 @@ router.post("/create", async function (req, res, next) {
             key: key,
             option: optionResult(),
             created_at: timeNow(),
-            dowloadlink: `/api/onechatroom/getlink/${meetingid}.zip`,
+            downloadlink: `/api/onechatroom/getlink/${meetingid}.zip`,
           },
           events: "CreateRoom",
           status: "Success",
