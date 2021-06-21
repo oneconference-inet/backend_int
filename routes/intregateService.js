@@ -74,7 +74,9 @@ router.get('/getlink/:meetingid', async function (req, res) {
 
 router.post('/create', async function (req, res, next) {
   let data = req.body;
-  // console.log(data);
+  // console.log(data); 
+  console.log('~ Header ~');
+  console.log(req.headers);
   try {
     const tokenkey = req.headers['authorization'].split(' ')[1];
     if (auth(tokenkey, data.tag)) {
