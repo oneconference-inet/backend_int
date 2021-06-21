@@ -471,6 +471,8 @@ router.post('/create', async function (req, res, next) {
         });
       }
     } else {
+      console.log('~ tokenkey ~');
+      console.log(tokenkey);
       res.status(401).send({
         status: 'AuthError',
         error: 'SecretKey-Wrong',
