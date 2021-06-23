@@ -432,6 +432,7 @@ router.post('/create', async function (req, res, next) {
           urlroom: url,
           keyroom: key,
           member: [{ name: encodeName, join_at: timeNow(), out_at: '' }],
+          oneboxaccountid: data.account_id,
           meeting_id: meetingid,
           created_at: Date.now(),
         });
