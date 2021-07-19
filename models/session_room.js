@@ -14,6 +14,7 @@ var Schema = new mongoose.Schema({
     member:{  type:Array, default: null },
     urlInvite: { type:String, default: '' },
     presenter: { type:String, default: '' },
+    timelastuser: { type: String, default: '' },
     created_at : { type:Date, default: Date.now() },
     updated_at : { type:Date, default: Date.now() },
 }, { collection: 'Session_room' })
